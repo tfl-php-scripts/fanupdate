@@ -1,4 +1,4 @@
-<?php /** @noinspection Annotator */
+<?php
 /*****************************************************************************
  * FanUpdate
  * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
@@ -35,7 +35,7 @@
 <?php } ?>
 
 <div class="credit">
-<p>Powered by <a href="<?php echo $this->getOpt('url'); ?>">FanUpdate <?php echo $this->getOpt('version'); ?></a></p>
+   <?php $this->printCredits() ?>
 </div>
 
 </div><!-- END #wrap -->

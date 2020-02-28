@@ -19,10 +19,8 @@
  ******************************************************************************/
 
 // DON'T CHANGE THESE!
-$fanupdate['version'] = '2.2.1';
-$fanupdate['url'] = 'http://prism-perfect.net/fanupdate';
-
-$fanupdate['tables'] = array($fanupdate['blog_table'], $fanupdate['collective_table'], $fanupdate['catjoin_table'], $fanupdate['comments_table'], $fanupdate['options_table'], $fanupdate['blacklist_table'], $fanupdate['catoptions_table'], $fanupdate['smilies_table']);
+$fanupdate = $fanupdate ?? [];
+$fanupdate['tables'] = [$fanupdate['blog_table'], $fanupdate['collective_table'], $fanupdate['catjoin_table'], $fanupdate['comments_table'], $fanupdate['options_table'], $fanupdate['blacklist_table'], $fanupdate['catoptions_table'], $fanupdate['smilies_table']];
 
 // requires SqlConnection class, clean_input
 
@@ -40,6 +38,12 @@ class FanUpdate
     public $smiley_imgs = array();
     public $observers = array();
 
+    private $config = [
+        'version' => '2.3',
+        'url' => 'http://prism-perfect.net/fanupdate',
+        'newUrl' => 'https://scripts.robotess.net',
+    ];
+
     /**
      * @var self
      */
@@ -49,7 +53,7 @@ class FanUpdate
     {
         global $fanupdate, $coltable;
 
-        $this->_cfg = $fanupdate;
+        $this->_cfg = array_merge($fanupdate, $this->config);
         $this->_cfg['col_id'] = $coltable[$this->getOpt('collective_script', true)]['id'];
         $this->_cfg['col_subj'] = $coltable[$this->getOpt('collective_script', true)]['subject'];
         $this->db = SqlConnection::instance($this->getOpt('dbhost'), $this->getOpt('dbuser'), $this->getOpt('dbpass'), $this->getOpt('dbname'));
@@ -474,6 +478,16 @@ class FanUpdate
 
         }
     }
+
+    public function printCredits()
+    {
+        ?>
+        Powered by <a href="<?= $this->GetOpt('newUrl') ?>" target="_blank"
+                      title="PHP scripts collection: Enthusiast, CodeSort, SiteSkin for PHP 7">CodeSort <?= $this->GetOpt('version') ?></a> (2020 - ...) /
+        Original script by <a href="<?= $this->GetOpt('url') ?>" target="_blank"><?= $this->GetOpt('url') ?></a>
+        <?php
+    }
+
 
     public function printBlog($query, $main_limit = 5, $single_page = false)
     {

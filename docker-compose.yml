@@ -6,7 +6,7 @@ services:
     image: fanupdate-php7-apache
     build:
       context: .
-      dockerfile: .docker/Dockerfile
+      dockerfile: docker/Dockerfile
     ports:
       - 8033:80
       - 9001:9001
@@ -16,9 +16,10 @@ services:
     links:
       - mysql
     volumes:
-      - ./public:/app/public
-      - ./.docker/configs/blog-config.php:/app/public/fanupdate/blog-config.php:ro
-      - ./.docker/vhost.conf:/etc/apache2/sites-available/000-default.conf:ro
+      - ./fanupdate:/app/public/fanupdate
+      - ./docker/samplepublic/blog-config.php:/app/public/fanupdate/blog-config.php:ro
+      - ./docker/samplepublic/index.php:/app/public/index.php:ro
+      - ./docker/vhost.conf:/etc/apache2/sites-available/000-default.conf:ro
     environment:
       XDEBUG_CONFIG: "remote_host=192.168.201.1 remote_enable=1 remote_port=9002"
       PHP_IDE_CONFIG: "serverName=Docker"
@@ -43,7 +44,7 @@ services:
     ports:
       - 13306:3306
     volumes:
-      - ./.docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     networks:
       - internal
 
