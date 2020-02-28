@@ -1,4 +1,22 @@
 <?php
+/*****************************************************************************
+ * FanUpdate
+ * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
+ * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
+*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 require_once('blog-config.php');
 require_once('functions.php');
@@ -13,7 +31,7 @@ if (isset($_GET['id'])) {
 
     $id = (int)$_GET['id'];
 
-    $query = "SELECT b.* FROM ".$fu->getOpt('blog_table')." b WHERE b.entry_id=".$id." LIMIT 1";
+    $query = 'SELECT b.* FROM ' .$fu->getOpt('blog_table'). ' b WHERE b.entry_id=' .$id. ' LIMIT 1';
 
     $fu->db->Execute($query);
 	$row = $fu->db->GetRecord();
@@ -23,13 +41,13 @@ if (isset($_GET['id'])) {
 	$feed->setLink($post->getCommentsUrl());
 	$feed->setDescription('The latest comments on "'.$post->getTitle().'" from '.$fu->getOpt('site_name').'.');
 
-    $query = "SELECT c.*
-    FROM ".$fu->getOpt('comments_table')." c
+    $query = 'SELECT c.*
+    FROM ' .$fu->getOpt('comments_table')." c
     WHERE c.entry_id=$id AND c.approved > 0
     ORDER BY c.added DESC LIMIT 20";
 
-	$query_added = "SELECT c.added
-	FROM ".$fu->getOpt('comments_table')." c
+	$query_added = 'SELECT c.added
+	FROM ' .$fu->getOpt('comments_table')." c
 	WHERE c.entry_id=$id AND c.approved > 0
 	ORDER BY c.added DESC LIMIT 1";
 
@@ -39,15 +57,15 @@ if (isset($_GET['id'])) {
 	$feed->setLink($fu->getOpt('blog_page'));
 	$feed->setDescription('The latest comments from '.$fu->getOpt('site_name').'.');
 
-    $query = "SELECT c.*
-    FROM ".$fu->getOpt('comments_table')." c
+    $query = 'SELECT c.*
+    FROM ' .$fu->getOpt('comments_table'). ' c
     WHERE c.approved > 0
-    ORDER BY c.added DESC LIMIT 20";
+    ORDER BY c.added DESC LIMIT 20';
 
-	$query_added = "SELECT c.added
-	FROM ".$fu->getOpt('comments_table')." c
+	$query_added = 'SELECT c.added
+	FROM ' .$fu->getOpt('comments_table'). ' c
 	WHERE c.approved > 0
-	ORDER BY c.added DESC LIMIT 1";
+	ORDER BY c.added DESC LIMIT 1';
 }
 
 $fu->db->Execute($query_added);
@@ -82,4 +100,4 @@ while ($row = $fu->db->ReadRecord()) {
 
 $feed->generateFeed();
 
-?>
+

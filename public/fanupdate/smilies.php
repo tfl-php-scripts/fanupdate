@@ -1,4 +1,22 @@
 <?php
+/*****************************************************************************
+ * FanUpdate
+ * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
+ * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
+*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 require_once('blog-config.php');
 require_once('functions.php');
@@ -26,7 +44,7 @@ if (isset($_POST['action'])) {
            $sql_smiley = $fu->db->Escape($clean['smiley']);
            $sql_image = $fu->db->Escape($clean['image']);
 
-            $query = "INSERT INTO ".$fu->getOpt('smilies_table')." (smiley, image)
+            $query = 'INSERT INTO ' .$fu->getOpt('smilies_table')." (smiley, image)
               VALUES ('$sql_smiley', '$sql_image')";
 
             if ($fu->db->Execute($query)) {
@@ -44,7 +62,7 @@ if (isset($_POST['action'])) {
            $sql_smiley = $fu->db->Escape($value);
            $sql_image = $fu->db->Escape($clean['image'][$key]);
 
-            $query = "UPDATE ".$fu->getOpt('smilies_table')."
+            $query = 'UPDATE ' .$fu->getOpt('smilies_table')."
               SET image='$sql_image' WHERE smiley='$sql_smiley'";
 
             if ($fu->db->Execute($query) && $fu->db->AffectedRows() > 0) {
@@ -60,7 +78,7 @@ if (isset($_POST['action'])) {
 
             $sql_id = $fu->db->Escape($key);
 
-            $query = "DELETE FROM ".$fu->getOpt('smilies_table')."
+            $query = 'DELETE FROM ' .$fu->getOpt('smilies_table')."
               WHERE smiley='".$sql_id."'";
 
             if ($fu->db->Execute($query)) {
@@ -107,8 +125,8 @@ $fu->reportErrors();
 
 // ____________________________________________________________ LIST Words
 
-$query = "SELECT *
-  FROM ".$fu->getOpt('smilies_table');
+$query = 'SELECT *
+  FROM ' .$fu->getOpt('smilies_table');
 
 $fu->db->Execute($query);
 

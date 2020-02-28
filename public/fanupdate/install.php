@@ -1,4 +1,22 @@
 <?php
+/*****************************************************************************
+ * FanUpdate
+ * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
+ * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
+*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 require_once('blog-config.php');
 require_once('functions.php');
@@ -22,13 +40,13 @@ $installer_version = '2.2.1b2'; // may be less than script version if no db chan
 
 // check for current version installed
 
-$query_cat = "SELECT * FROM ".$fu->getOpt('blog_table')." WHERE listingid=0 LIMIT 1";
+$query_cat = 'SELECT * FROM ' .$fu->getOpt('blog_table'). ' WHERE listingid=0 LIMIT 1';
 
 if (@$fu->db->Execute($query_cat)) {
     $version_installed = 1.5;
 } else {
 
-    $query_opt = "SELECT * FROM ".$fu->getOpt('options_table')." WHERE id=1 LIMIT 1";
+    $query_opt = 'SELECT * FROM ' .$fu->getOpt('options_table'). ' WHERE id=1 LIMIT 1';
     @$fu->db->Execute($query_opt);
 
     if ($fu->db->NumRows() > 0) {
@@ -50,7 +68,7 @@ if (@$fu->db->Execute($query_cat)) {
 
 // auto-detect paths
 
-$dir = dirname(__FILE__);
+$dir = __DIR__;
 // correct for weird DreamHost .name thingy
 $dir = preg_replace('#/\.([a-z]+)#', '', $dir);
 // fix Windows dir slashes
@@ -266,12 +284,12 @@ $setting[28]['version'] = '2.2.1b2';
 
 if ($version_installed == 0) {
 	$tables = array();
-	$query = "SHOW TABLES";
+	$query = 'SHOW TABLES';
 	$fu->db->Execute($query);
 	while ($row = $fu->db->ReadRecord()) {
 		$table = array_shift($row);
 		if (!$fu->getOpt('collective_script') || $table != $fu->getOpt('collective_table')) {
-			if (in_array($table, $fu->getOpt('tables'))) {
+			if (in_array($table, $fu->getOpt('tables'), true)) {
 				$fu->addErr('Table <strong>'.$table.'</strong> already exists. Please choose a different name in your FanUpdate blog-config.php');
 			}
 		}
@@ -297,9 +315,7 @@ if (version_compare($version_installed, $installer_version, '>=')) {
 
 if (!$fu->noErr()) {
 	$fu->reportErrors();
-} else {
-
-if (isset($_POST['upgrade']) || isset($_POST['fresh_install'])) {
+} else if (isset($_POST['upgrade']) || isset($_POST['fresh_install'])) {
 
 // _______________________________________________ FRESH INSTALL
 
@@ -630,7 +646,7 @@ if ($version_installed > 0 && version_compare($version_installed, 2.1, '<')) {
 // _______________________________________________ FRESH INSTALL OR UPGRADE FROM < 2.1
 
 if (version_compare($version_installed, 2.1, '<')) {
-	
+
     // ___________________________________________ create smilies table
 
     $query = "CREATE TABLE ".$fu->getOpt('smilies_table')." (
@@ -664,27 +680,27 @@ if (version_compare($version_installed, 2.1, '<')) {
 // _______________________________________________ UPGRADE FROM < 2.2b
 
 if ($version_installed > 0 && version_compare($version_installed, '2.2b', '<')) {
-	
+
 	// ___________________________________________ rename some stupid option names
-	
+
 	$query = "UPDATE ".$fu->getOpt('options_table')." SET optkey='site_name' WHERE optkey='collective_name'";
-	
+
 	if ($fu->db->Execute($query)) {
         $fu->AddSuccess('Updated option name for <strong>site_name</strong>');
     } else {
         $fu->AddErr('Failed to update option name for <strong>site_name</strong>.');
     }
-	
+
 	$query = "UPDATE ".$fu->getOpt('options_table')." SET optkey='blog_page' WHERE optkey='collective_updates_page'";
-	
+
 	if ($fu->db->Execute($query)) {
         $fu->AddSuccess('Updated option name for <strong>blog_page</strong>');
     } else {
         $fu->AddErr('Failed to update option name for <strong>blog_page</strong>.');
     }
-	
+
 	$query = "UPDATE ".$fu->getOpt('options_table')." SET optkey='install_path' WHERE optkey='install_folder'";
-	
+
 	if ($fu->db->Execute($query)) {
         $fu->AddSuccess('Updated option name for <strong>install_path</strong>');
     } else {
@@ -703,7 +719,7 @@ if ($version_installed > 0 && version_compare($version_installed, '2.2b', '<')) 
     }
 
 	// remove {{wysiwyg}} template tag
-	
+
 	$query = "UPDATE ".$fu->getOpt('options_table')." SET optvalue=REPLACE(optvalue, '{{wysiwyg}}<br />', '') WHERE optkey='comment_form_template'";
 
     if ($fu->db->Execute($query)) {
@@ -728,11 +744,11 @@ if ($version_installed > 0 && version_compare($version_installed, '2.2b', '<')) 
 // _______________________________________________ UPGRADE FROM < 2.2b3
 
 if ($version_installed > 0 && version_compare($version_installed, '2.2b3', '<')) {
-	
+
 	// ___________________________________________ convert to GMT
-	
+
 	$query = "UPDATE ".$fu->getOpt('blog_table')." SET added=DATE_ADD(added, INTERVAL ".(0 - $setting[27]['optvalue'])." HOUR)";
-	
+
 	if ($fu->db->Execute($query)) {
 		if ($fu->db->AffectedRows() > 0) {
         	$fu->AddSuccess('Blog times converted to GMT.');
@@ -742,7 +758,7 @@ if ($version_installed > 0 && version_compare($version_installed, '2.2b3', '<'))
     }
 
 	$query = "UPDATE ".$fu->getOpt('comments_table')." SET added=DATE_ADD(added, INTERVAL ".(0 - $setting[27]['optvalue'])." HOUR)";
-	
+
 	if ($fu->db->Execute($query)) {
 		if ($fu->db->AffectedRows() > 0) {
         	$fu->AddSuccess('Comment times converted to GMT.');
@@ -750,13 +766,13 @@ if ($version_installed > 0 && version_compare($version_installed, '2.2b3', '<'))
     } else {
         $fu->AddErr('Failed to convert comment times to GMT!');
     }
-	
+
 }
 
 // _______________________________________________ UPGRADE FROM < 2.2.1b2
 
 if ($version_installed > 0 && version_compare($version_installed, '2.2.1b2', '<')) {
-	
+
 	// ___________________________________________ modify old comment table scheme
 
     $query = "ALTER TABLE ".$fu->getOpt('comments_table')."
@@ -767,7 +783,7 @@ if ($version_installed > 0 && version_compare($version_installed, '2.2.1b2', '<'
     } else {
         $fu->AddErr('Old table <strong>'.$fu->getOpt('comments_table').'</strong> not modified!');
     }
-	
+
 }
 
 // _______________________________________________ UPGRADE FROM ANY VERSION
@@ -828,7 +844,7 @@ if ($version_installed > 0 && version_compare($version_installed, $installer_ver
 	foreach ($setting as $val) {
 		$optkey = $fu->db->Escape($val['optkey']);
 		$optdesc = $fu->db->Escape($val['optdesc']);
-		
+
 		$query = "UPDATE ".$fu->getOpt('options_table')." SET optdesc='$optdesc' WHERE optkey='$optkey'";
 
         if ($fu->db->Execute($query)) {
@@ -892,18 +908,18 @@ $fu->reportErrors();
 <?php
 
 foreach ($setting as $id => $row) {
-	
+
 if (version_compare($version_installed, $row['version'], '<')) {
-	
+
 if (strpos($row['optkey'], '_') == 0) { // hide private vars
 
 ?>
 <input type="hidden" id="<?php echo $row['optkey']; ?>" name="value[]" value="<?php echo $row['optvalue']; ?>" />
 <input type="hidden" name="key[]" value="<?php echo $id; ?>" />
 <?php
-	
+
 } else {
-	
+
 $class = (isset($class) && $class == 'even') ? 'odd' : 'even';
 
 ?>
@@ -924,7 +940,7 @@ $class = (isset($class) && $class == 'even') ? 'odd' : 'even';
 
 }
 
-} 
+}
 
 ?>
 
@@ -947,8 +963,6 @@ if (timezone_offset = $('timezone_offset')) {
 </script>
 
 <?php
-
-}
 
 }
 

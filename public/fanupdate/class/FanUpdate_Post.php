@@ -1,11 +1,30 @@
 <?php
+/*****************************************************************************
+ * FanUpdate
+ * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
+ * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
-class FanUpdate_Post {
+class FanUpdate_Post
+{
+    public $params = array();
+    public $fu;
 
-    var $params = array();
-    var $fu;
-
-    function FanUpdate_Post($params, &$fu, $self = null) {
+    public function __construct($params, FanUpdate $fu, $self = null)
+    {
         $this->params = $params;
         $this->fu = $fu;
 
@@ -38,7 +57,7 @@ class FanUpdate_Post {
         } else {
             $this->params['url'] = $this->fu->GetCleanSelf();
         }
-        $this->params['url'] .= '?id='.$this->params['entry_id'];
+        $this->params['url'] .= '?id=' . $this->params['entry_id'];
 
         if (!isset($this->params['is_public']) || $this->params['is_public'] == 1) {
             $this->params['is_public'] = true;
@@ -60,162 +79,177 @@ class FanUpdate_Post {
         }
     }
 
-    function addParam($key, $value) {
+    public function addParam($key, $value)
+    {
         $this->params[$key] = $value;
     }
 
-	function addCategory($key, $val) {
-		$this->params['category'][$key] = $value;
-	}
+    public function addCategory($key, $val)
+    {
+        $this->params['category'][$key] = $val;
+    }
 
-    function getID() {
+    public function getID()
+    {
         return $this->params['entry_id'];
     }
 
-    function isPublic() {
+    public function isPublic()
+    {
         return $this->params['is_public'];
     }
 
-    function commentsOn() {
+    public function commentsOn()
+    {
         return $this->params['comments_on'];
     }
 
-    function getTitle() {
+    public function getTitle()
+    {
         return $this->params['title'];
     }
 
-    function getUrl() {
+    public function getUrl()
+    {
         return $this->params['url'];
     }
 
-	function getCommentsUrl() {
-		return $this->params['url'].'#comments';
-	}
-	
-	function getCommentsFeedUrl() {
-		return $this->fu->getOpt('install_url').'/rss-comments.php?id='.$this->getID();
-	}
+    public function getCommentsUrl()
+    {
+        return $this->params['url'] . '#comments';
+    }
 
-    function getYear() {
+    public function getCommentsFeedUrl()
+    {
+        return $this->fu->getOpt('install_url') . '/rss-comments.php?id=' . $this->getID();
+    }
+
+    public function getYear()
+    {
         return substr($this->params['added'], 0, 4);
     }
 
-    function getDate() {
+    public function getDate()
+    {
         return $this->params['added'];
     }
 
-    function getDateFormatted($format = false) {
-		if (!$format) {
-			$format = $this->fu->getOpt('date_format');
-		}
+    public function getDateFormatted($format = false)
+    {
+        if (!$format) {
+            $format = $this->fu->getOpt('date_format');
+        }
         return date($format, strtotime($this->params['added']) + ($this->fu->getOpt('timezone_offset') * 3600));
     }
 
-    function allowComments() {
+    public function allowComments()
+    {
         return $this->params['allow_comments'];
     }
 
-    function getBody() {
+    public function getBody()
+    {
         return $this->params['body'];
     }
 
-    function getBodyFormatted() {
+    public function getBodyFormatted()
+    {
         return wpautop($this->fu->replaceSmilies($this->params['body']), true, true);
     }
 
-    function getCommentLink() {
+    public function getCommentLink()
+    {
 
         if ($this->allowComments()) {
 
             if ($this->params['num_comments'] == 0) {
-                return '<a href="'.$this->getCommentsUrl().'">Leave a comment?</a>';
-            } elseif ($this->params['num_comments'] == 1) {
-                return '<a href="'.$this->getCommentsUrl().'">1 comment</a>.';
+                return '<a href="' . $this->getCommentsUrl() . '">Leave a comment?</a>';
+            }
+
+            if ($this->params['num_comments'] == 1) {
+                return '<a href="' . $this->getCommentsUrl() . '">1 comment</a>.';
             } else {
-                return '<a href="'.$this->getCommentsUrl().'">'.$this->params['num_comments'].' comments</a>.';
+                return '<a href="' . $this->getCommentsUrl() . '">' . $this->params['num_comments'] . ' comments</a>.';
             }
         }
         return '';
     }
 
-	function getCatFromDb($cat_ids = null) {
+    public function getCatFromDb($cat_ids = null)
+    {
+        if (is_array($cat_ids)) {
+            $query = 'SELECT c.' . $this->fu->getOpt('col_id') . ' AS cat_id, c.' . $this->fu->getOpt('col_subj') . ' AS cat_name
+	        FROM ' . $this->fu->getOpt('collective_table') . ' c
+			WHERE c.' . $this->fu->getOpt('col_id') . ' IN(' . implode(',', $cat_ids) . ')';
+        } else {
+            $query = 'SELECT c.' . $this->fu->getOpt('col_id') . ' AS cat_id, c.' . $this->fu->getOpt('col_subj') . ' AS cat_name
+	        FROM ' . $this->fu->getOpt('catjoin_table') . ' j
+	        LEFT JOIN ' . $this->fu->getOpt('collective_table') . ' c ON j.cat_id=c.' . $this->fu->getOpt('col_id') . '
+        	WHERE j.entry_id=' . $this->getID();
+        }
 
-		if (is_array($cat_ids)) {
-			$query = "SELECT c.".$this->fu->getOpt('col_id')." AS cat_id, c.".$this->fu->getOpt('col_subj')." AS cat_name
-	        FROM ".$this->fu->getOpt('collective_table')." c
-			WHERE c.".$this->fu->getOpt('col_id')." IN(".implode(',', $cat_ids).")";
-		} else {
-			$query = "SELECT c.".$this->fu->getOpt('col_id')." AS cat_id, c.".$this->fu->getOpt('col_subj')." AS cat_name
-	        FROM ".$this->fu->getOpt('catjoin_table')." j
-	        LEFT JOIN ".$this->fu->getOpt('collective_table')." c ON j.cat_id=c.".$this->fu->getOpt('col_id')."
-        	WHERE j.entry_id=".$this->getID();
-		}
+        $this->fu->db->Execute($query);
 
-	    $this->fu->db->Execute($query);
+        while ($row = $this->fu->db->ReadRecord()) {
+            $this->params['category'][$row['cat_id']] = $row['cat_name'];
+        }
+        $this->fu->db->FreeResult();
+    }
 
-	    while ($row = $this->fu->db->ReadRecord()) {
-	        $this->params['category'][$row['cat_id']] = $row['cat_name'];
-	    }
-	    $this->fu->db->FreeResult();
-	}
-
-	function getCategoryArray() {
+    public function getCategoryArray()
+    {
         return $this->params['category'];
     }
 
-	function getCategoryString() {
+    public function getCategoryString()
+    {
         return implode(', ', $this->params['category']);
     }
 
-    function getCategoryLink() {
-		$tmp = array();
-		foreach ($this->params['category'] as $key => $val) {
-        	$tmp[] = '<a href="'.$this->fu->getCleanSelf().'?c='.$key.'" title="all posts about '.$val.'">'.$val.'</a>';
-		}
-		return implode(', ', $tmp);
+    public function getCategoryLink()
+    {
+        $tmp = array();
+        foreach ($this->params['category'] as $key => $val) {
+            $tmp[] = '<a href="' . $this->fu->getCleanSelf() . '?c=' . $key . '" title="all posts about ' . $val . '">' . $val . '</a>';
+        }
+        return implode(', ', $tmp);
     }
 
-    function getRMLink() {
-        return '<a href="'.$this->getUrl().'">Read more of '.$this->getTitle().'.</a>';
+    public function getRMLink()
+    {
+        return '<a href="' . $this->getUrl() . '">Read more of ' . $this->getTitle() . '.</a>';
     }
 
-    function printPost($doSummary = false) {
+    public function printPost($doSummary = false)
+    {
 
         if ($doSummary) {
 
             if (strpos($this->params['body'], '<!-- MORE -->')) {
 
                 list($this->params['body']) = explode('<!-- MORE -->', $this->params['body'], 2);
-                $this->params['body'] .= ' '.$this->getRMLink();
+                $this->params['body'] .= ' ' . $this->getRMLink();
 
-            } else {
+            } else if ($this->fu->getOpt('abstract_word_count') > 0) {
 
-                if ($this->fu->getOpt('abstract_word_count') > 0) {
+                $text_chop = strip_tags($this->params['body']);
+                $text_chop = truncate_wc($text_chop, $this->fu->getOpt('abstract_word_count'));
 
-                    $text_chop = strip_tags($this->params['body']);
-                    $text_chop = truncate_wc($text_chop, $this->fu->getOpt('abstract_word_count'));
-
-                    // if text was longer than abstract_word_count, truncate_wc appends &#8320;
-                    // thus a test for whether a read more link is needed
-                    if (!empty($text_chop) && substr($text_chop, -7) == '&#8230;') {
-                        $this->params['body'] = $text_chop;
-                        $this->params['body'] .= ' <a href="'.$this->getUrl().'">Read more of '.$this->getTitle().'.</a>';
-                    }
+                // if text was longer than abstract_word_count, truncate_wc appends &#8320;
+                // thus a test for whether a read more link is needed
+                if (!empty($text_chop) && substr($text_chop, -7) === '&#8230;') {
+                    $this->params['body'] = $text_chop;
+                    $this->params['body'] .= ' <a href="' . $this->getUrl() . '">Read more of ' . $this->getTitle() . '.</a>';
                 }
             }
         }
 
         $text = str_replace('{{title}}', wptexturize($this->getTitle()), $this->fu->getOpt('entry_template'));
-        $text = str_replace('{{id}}', $this->getID(), $text);
-        $text = str_replace('{{url}}', $this->getUrl(), $text);
-        $text = str_replace('{{date}}', $this->getDateFormatted(), $text);
-        $text = str_replace('{{category}}', $this->getCategoryLink(), $text);
-        $text = str_replace('{{comment_link}}', $this->getCommentLink(), $text);
-        $text = str_replace('{{body}}', $this->getBodyFormatted(), $text);
+        $text = str_replace(array('{{id}}', '{{url}}'), array($this->getID(), $this->getUrl()), $text);
+        $text = str_replace(array('{{date}}', '{{category}}'), array($this->getDateFormatted(), $this->getCategoryLink()), $text);
+        $text = str_replace(array('{{comment_link}}', '{{body}}'), array($this->getCommentLink(), $this->getBodyFormatted()), $text);
 
         echo $text;
     }
 
-} // end class FanUpdate_Post
-
-?>
+}

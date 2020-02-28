@@ -1,4 +1,22 @@
 <?php
+/*****************************************************************************
+ * FanUpdate
+ * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
+ * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
+*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 require_once('blog-config.php');
 require_once('functions.php');
@@ -23,7 +41,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
 
     $sql_id = (int)$_GET['id'];
 
-    $query = "SELECT * FROM ".$fu->getOpt('blog_table')." WHERE entry_id=".$sql_id." LIMIT 1";
+    $query = 'SELECT * FROM ' .$fu->getOpt('blog_table'). ' WHERE entry_id=' .$sql_id. ' LIMIT 1';
     $fu->db->Execute($query);
 
     $row = $fu->db->GetRecord();
@@ -90,7 +108,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
 				if (!empty($val)) {
 					$sql_val = $fu->db->Escape($val);
 					
-					$query = "INSERT INTO ".$fu->getOpt('collective_table')." (".$fu->getOpt('col_subj').")
+					$query = 'INSERT INTO ' .$fu->getOpt('collective_table'). ' (' .$fu->getOpt('col_subj').")
 	                  VALUES ('$sql_val')";
 	
 					if ($fu->db->Execute($query)) {
@@ -100,7 +118,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
 						$clean['cat'][] = $sql_id;
 						$post->addCategory($sql_id, $val);
 
-	                    $query = "INSERT INTO ".$fu->getOpt('catoptions_table')." (cat_id)
+	                    $query = 'INSERT INTO ' .$fu->getOpt('catoptions_table')." (cat_id)
 	                      VALUEs ($sql_id)";
 
 	                    $fu->db->Execute($query);
@@ -119,7 +137,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
 
             if ($_POST['action'] == 'add') {
 
-                $query = "INSERT INTO ".$fu->getOpt('blog_table')." (title, body, is_public, comments_on, added)
+                $query = 'INSERT INTO ' .$fu->getOpt('blog_table')." (title, body, is_public, comments_on, added)
                   VALUES ('$sql_title', '$sql_body', $sql_is_public, $sql_comments_on, '$sql_added')";
 
                 if ($fu->db->Execute($query)) {
@@ -132,7 +150,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
                     foreach ($clean['cat'] as $cat_id) {
                         $sql_cat_id = (int)$cat_id;
 
-                        $query_cat = "INSERT INTO ".$fu->getOpt('catjoin_table')." (entry_id, cat_id)
+                        $query_cat = 'INSERT INTO ' .$fu->getOpt('catjoin_table')." (entry_id, cat_id)
                           VALUES ($sql_id, $sql_cat_id)";
 
                         if ($fu->db->Execute($query_cat)) {
@@ -153,7 +171,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
 
                 $sql_id = (int)$clean['id'];
 
-                $query = "UPDATE ".$fu->getOpt('blog_table')."
+                $query = 'UPDATE ' .$fu->getOpt('blog_table')."
                   SET title='$sql_title', body='$sql_body',
                   is_public=$sql_is_public, comments_on=$sql_comments_on,
                   added='$sql_added'
@@ -168,7 +186,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
 						$clean['cat'] = array();
 					}
 
-                    $query_old_cat = "SELECT cat_id FROM ".$fu->getOpt('catjoin_table')." WHERE entry_id=".$sql_id;
+                    $query_old_cat = 'SELECT cat_id FROM ' .$fu->getOpt('catjoin_table'). ' WHERE entry_id=' .$sql_id;
                     $fu->db->Execute($query_old_cat);
                     $num_old_cat = $fu->db->NumRows();
 
@@ -180,12 +198,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
 
                         while ($row_old_cat = $fu->db->ReadRecord()) {
 
-                            if (!in_array($row_old_cat['cat_id'], $clean['cat'])) {
+                            if (!in_array($row_old_cat['cat_id'], $clean['cat'], true)) {
 
                                 $sql_old_cat = (int)$row_old_cat['cat_id'];
 
-                                $query_delete_cat = "DELETE FROM ".$fu->getOpt('catjoin_table')."
-                                  WHERE entry_id=".$sql_id." AND cat_id=".$sql_old_cat;
+                                $query_delete_cat = 'DELETE FROM ' .$fu->getOpt('catjoin_table'). '
+                                  WHERE entry_id=' .$sql_id. ' AND cat_id=' .$sql_old_cat;
 
                                 if ($fu->db->Execute($query_delete_cat)) {
                                     $num_success++;
@@ -211,7 +229,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
                     foreach ($cat_array as $cat_id) {
                         $sql_cat_id = (int)$cat_id;
 
-                        $query_cat = "INSERT INTO ".$fu->getOpt('catjoin_table')." (entry_id, cat_id) VALUES ($sql_id, $sql_cat_id)";
+                        $query_cat = 'INSERT INTO ' .$fu->getOpt('catjoin_table')." (entry_id, cat_id) VALUES ($sql_id, $sql_cat_id)";
 
                         if ($fu->db->Execute($query_cat)) {
                             $num_success++;
@@ -234,11 +252,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
 
         $sql_id = (int)$clean['id'];
 
-        $query = "DELETE FROM ".$fu->getOpt('blog_table')." WHERE entry_id=$sql_id";
+        $query = 'DELETE FROM ' .$fu->getOpt('blog_table')." WHERE entry_id=$sql_id";
 
         if ($fu->db->Execute($query)) {
 
-            $query_cat = "DELETE FROM ".$fu->getOpt('catjoin_table')." WHERE entry_id=$sql_id";
+            $query_cat = 'DELETE FROM ' .$fu->getOpt('catjoin_table')." WHERE entry_id=$sql_id";
 
             $fu->db->Execute($query_cat);
 
@@ -277,9 +295,9 @@ if ($showform && $post->getID()) {
 <option value="">All</option>
 <?php
 
-$query = "SELECT ".$fu->getOpt('col_id')." AS cat_id, ".$fu->getOpt('col_subj')." AS cat_name
-  FROM ".$fu->getOpt('collective_table')."
-  ORDER BY cat_name ASC";
+$query = 'SELECT ' .$fu->getOpt('col_id'). ' AS cat_id, ' .$fu->getOpt('col_subj'). ' AS cat_name
+  FROM ' .$fu->getOpt('collective_table'). '
+  ORDER BY cat_name ASC';
 
 $fu->db->Execute($query);
 
@@ -351,7 +369,7 @@ if ($showform) {
  value="<?php echo $post->getDateFormatted('Y-m-d g:i a'); ?>" />
 
 <span><input type="checkbox" id="now" name="date_to_now" value="y"
-<?php if (!$post->getID() || (!empty($clean['date_to_now']) && $clean['date_to_now'] == "y")) { echo ' checked="checked"'; } ?> />
+<?php if (!$post->getID() || (!empty($clean['date_to_now']) && $clean['date_to_now'] == 'y')) { echo ' checked="checked"'; } ?> />
 <label for="now" class="checkbox">NOW</label></span></p>
 
 <p><input type="checkbox" id="is_public" name="is_public" value="1"
@@ -370,13 +388,13 @@ if ($showform) {
 <ul id="categories" class="catlist select_all">
 <?php if ($fu->getOpt('collective_script')) { ?>
 <li><input type="checkbox" id="cat0" name="cat[]" value="0"
-<?php if (isset($clean['cat']) && in_array(0, $clean['cat'])) { echo ' checked="checked"'; } ?> />
+<?php if (isset($clean['cat']) && in_array(0, $clean['cat'], true)) { echo ' checked="checked"'; } ?> />
 <label for="cat0" class="checkbox">Collective</label></li>
 <?php }
 
-$query_cat = "SELECT ".$fu->getOpt('col_id')." AS cat_id, ".$fu->getOpt('col_subj')." AS cat_name
-  FROM ".$fu->getOpt('collective_table')."
-  ORDER BY cat_name ASC";
+$query_cat = 'SELECT ' .$fu->getOpt('col_id'). ' AS cat_id, ' .$fu->getOpt('col_subj'). ' AS cat_name
+  FROM ' .$fu->getOpt('collective_table'). '
+  ORDER BY cat_name ASC';
 
 $fu->db->Execute($query_cat);
 
@@ -440,10 +458,10 @@ if (!empty($clean['new_cat'])) {
 
 <?php
 
-$query = "SELECT b.entry_id, b.title, b.is_public, b.comments_on, b.added, COUNT(DISTINCT com.comment_id) AS num_comments
-FROM ".$fu->getOpt('blog_table')." b
-LEFT JOIN ".$fu->getOpt('catjoin_table')." j ON b.entry_id=j.entry_id
-LEFT JOIN ".$fu->getOpt('comments_table')." com ON b.entry_id=com.entry_id";
+$query = 'SELECT b.entry_id, b.title, b.is_public, b.comments_on, b.added, COUNT(DISTINCT com.comment_id) AS num_comments
+FROM ' .$fu->getOpt('blog_table'). ' b
+LEFT JOIN ' .$fu->getOpt('catjoin_table'). ' j ON b.entry_id=j.entry_id
+LEFT JOIN ' .$fu->getOpt('comments_table'). ' com ON b.entry_id=com.entry_id';
 
 if (isset($_GET['search'])) {
     $q = $fu->db->Escape(clean_input($_GET['search']));
@@ -453,20 +471,20 @@ if (isset($_GET['cat']) && $_GET['cat'] !== '') {
 	$cat = (int)$_GET['cat'];
 }
 if (isset($cat)) {
-	$query .= " JOIN ".$fu->getOpt('catjoin_table')." cat ON b.entry_id=cat.entry_id";
+	$query .= ' JOIN ' .$fu->getOpt('catjoin_table'). ' cat ON b.entry_id=cat.entry_id';
 }
 if (!empty($q) || isset($cat)) {
-    $query .= " WHERE ";
+    $query .= ' WHERE ';
     if (!empty($q)) {
         $query .= " MATCH (title,body) AGAINST ('$q' IN BOOLEAN MODE)";
-        if (isset($cat)) { $query .= " AND"; }
+        if (isset($cat)) { $query .= ' AND'; }
     }
     if (isset($cat)) {
 		$query .= " j.cat_id=$cat";
 	}
 }
 
-$query .= " GROUP BY b.entry_id ORDER BY b.added DESC";
+$query .= ' GROUP BY b.entry_id ORDER BY b.added DESC';
 
 $fu->db->ExecutePaginate($query, $fu->getOpt('num_per_page'));
 

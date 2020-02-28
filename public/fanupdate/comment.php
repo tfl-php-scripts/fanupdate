@@ -1,4 +1,23 @@
 <?php
+/*****************************************************************************
+ * FanUpdate
+ * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
+ * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
+*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
+
 
 require_once('blog-config.php');
 require_once('functions.php');
@@ -16,7 +35,7 @@ if (!empty($_GET['id'])) {
 
     $sql_id = (int)$_GET['id'];
 
-    $query = "SELECT * FROM ".$fu->getOpt('comments_table')." WHERE comment_id=".$sql_id;
+    $query = 'SELECT * FROM ' .$fu->getOpt('comments_table'). ' WHERE comment_id=' .$sql_id;
     $fu->db->Execute($query);
 
     $row = $fu->db->GetRecord();
@@ -65,7 +84,7 @@ if (!empty($_GET['id'])) {
 
             if ($_POST['action'] == 'update') {
 
-                $query = "UPDATE ".$fu->getOpt('comments_table')."
+                $query = 'UPDATE ' .$fu->getOpt('comments_table')."
                   SET name='$sql_name', email='$sql_email', url='$sql_url',
                   comment='$sql_comment', approved=$sql_approved, added='$sql_added'
                   WHERE comment_id=".$sql_id;
@@ -84,7 +103,7 @@ if (!empty($_GET['id'])) {
 
         $sql_id = (int)$_POST['id'];
 
-        $query = "UPDATE ".$fu->getOpt('comments_table')." SET approved=1 WHERE comment_id=".$sql_id;
+        $query = 'UPDATE ' .$fu->getOpt('comments_table'). ' SET approved=1 WHERE comment_id=' .$sql_id;
 
         if ($fu->db->Execute($query)) {
             if (isset($_POST['mode']) && $_POST['mode'] == 'ajax') {
@@ -101,10 +120,10 @@ if (!empty($_GET['id'])) {
     } elseif ($_POST['action'] == 'delete') {
 	
 		if ($_POST['id'] == 'spam') {
-			$query = "DELETE FROM ".$fu->getOpt('comments_table')." WHERE approved=0 AND points < ".$fu->getOpt('points_pending_threshold', true);
+			$query = 'DELETE FROM ' .$fu->getOpt('comments_table'). ' WHERE approved=0 AND points < ' .$fu->getOpt('points_pending_threshold', true);
 		} else {
         	$sql_id = (int)$_POST['id'];
-        	$query = "DELETE FROM ".$fu->getOpt('comments_table')." WHERE comment_id=".$sql_id;
+        	$query = 'DELETE FROM ' .$fu->getOpt('comments_table'). ' WHERE comment_id=' .$sql_id;
 		}
 
         if ($fu->db->Execute($query)) {
@@ -246,25 +265,25 @@ value="<?php echo $cmt->getDateFormatted('Y-m-d g:i a'); ?>" /></p>
 
 <?php
 
-$query = "SELECT c.*
-  FROM ".$fu->getOpt('comments_table')." c
-  LEFT JOIN ".$fu->getOpt('blog_table')." b ON c.entry_id=b.entry_id";
+$query = 'SELECT c.*
+  FROM ' .$fu->getOpt('comments_table'). ' c
+  LEFT JOIN ' .$fu->getOpt('blog_table'). ' b ON c.entry_id=b.entry_id';
 
 if (!empty($_GET['search'])) {
     $q = $fu->db->Escape(clean_input($_GET['search']));
     $query .= " WHERE MATCH (c.name, c.comment) AGAINST ('$q' IN BOOLEAN MODE)";
 } elseif (isset($_GET['show']) && $_GET['show'] == 'pending') {
-	$query .= " WHERE c.approved=0 AND c.points >= ".$fu->getOpt('points_pending_threshold', true);
+	$query .= ' WHERE c.approved=0 AND c.points >= ' .$fu->getOpt('points_pending_threshold', true);
 } elseif (isset($_GET['show']) && $_GET['show'] == 'spam') {
-	$query .= " WHERE c.approved=0 AND c.points < ".$fu->getOpt('points_pending_threshold', true);
+	$query .= ' WHERE c.approved=0 AND c.points < ' .$fu->getOpt('points_pending_threshold', true);
 } elseif (!empty($_GET['entry'])) {
 	$id = (int)$_GET['entry'];
 	$query .= " WHERE b.entry_id=$id";
 } else {
-	$query .= " WHERE c.approved>0";
+	$query .= ' WHERE c.approved>0';
 }
 
-$query .= " ORDER BY c.added DESC";
+$query .= ' ORDER BY c.added DESC';
 
 $fu->db->ExecutePaginate($query, $fu->getOpt('num_per_page'));
 

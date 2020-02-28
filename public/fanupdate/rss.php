@@ -1,4 +1,22 @@
 <?php
+/*****************************************************************************
+ * FanUpdate
+ * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
+ * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
+*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 require_once('blog-config.php');
 require_once('functions.php');
@@ -20,10 +38,10 @@ if (isset($_GET['c'])) {
         $subject = 'Collective';
     } else {
 
-        $query_cat = "SELECT c.".$fu->getOpt('col_subj')." AS cat_name
-        FROM ".$fu->getOpt('catjoin_table')." j
-        JOIN ".$fu->getOpt('collective_table')." c ON j.cat_id=c.".$fu->getOpt('col_id')."
-        WHERE j.cat_id=".$c;
+        $query_cat = 'SELECT c.' .$fu->getOpt('col_subj'). ' AS cat_name
+        FROM ' .$fu->getOpt('catjoin_table'). ' j
+        JOIN ' .$fu->getOpt('collective_table'). ' c ON j.cat_id=c.' .$fu->getOpt('col_id'). '
+        WHERE j.cat_id=' .$c;
 
         $subject = $fu->db->GetFirstCell($query_cat);
     }
@@ -32,18 +50,18 @@ if (isset($_GET['c'])) {
 	$feed->setLink($fu->getOpt('blog_page').'?c='.$c);
 	$feed->setDescription('The latest updates for '.$subject.' from '.$fu->getOpt('site_name').'.');
 
-    $query = "SELECT b.*, COUNT(c.comment_id) AS num_comments
-    FROM ".$fu->getOpt('blog_table')." b
-    JOIN ".$fu->getOpt('catjoin_table')." j ON b.entry_id=j.entry_id
-	LEFT JOIN ".$fu->getOpt('comments_table')." c ON b.entry_id=c.entry_id
-    WHERE b.is_public > 0 AND b.added <= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ".(0-$fu->getOpt('_server_tz_offset'))." HOUR) AND j.cat_id=$c
+    $query = 'SELECT b.*, COUNT(c.comment_id) AS num_comments
+    FROM ' .$fu->getOpt('blog_table'). ' b
+    JOIN ' .$fu->getOpt('catjoin_table'). ' j ON b.entry_id=j.entry_id
+	LEFT JOIN ' .$fu->getOpt('comments_table'). ' c ON b.entry_id=c.entry_id
+    WHERE b.is_public > 0 AND b.added <= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ' .(0-$fu->getOpt('_server_tz_offset'))." HOUR) AND j.cat_id=$c
 	GROUP BY b.entry_id
     ORDER BY b.added DESC LIMIT 20";
 
-	$query_added = "SELECT b.added
-	FROM ".$fu->getOpt('blog_table')." b
-	JOIN ".$fu->getOpt('catjoin_table')." j ON b.entry_id=j.entry_id
-    WHERE b.is_public > 0 AND b.added <= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ".(0-$fu->getOpt('_server_tz_offset'))." HOUR) AND j.cat_id=$c
+	$query_added = 'SELECT b.added
+	FROM ' .$fu->getOpt('blog_table'). ' b
+	JOIN ' .$fu->getOpt('catjoin_table'). ' j ON b.entry_id=j.entry_id
+    WHERE b.is_public > 0 AND b.added <= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ' .(0-$fu->getOpt('_server_tz_offset'))." HOUR) AND j.cat_id=$c
 	ORDER BY b.added DESC LIMIT 1";
 
 } else {
@@ -52,17 +70,17 @@ if (isset($_GET['c'])) {
 	$feed->setLink($fu->getOpt('blog_page'));
 	$feed->setDescription('The latest updates from '.$fu->getOpt('site_name').'.');
 	
-	$query = "SELECT b.*, COUNT(c.comment_id) AS num_comments
-    FROM ".$fu->getOpt('blog_table')."  b
-	LEFT JOIN ".$fu->getOpt('comments_table')." c ON b.entry_id=c.entry_id
-	WHERE b.is_public > 0 AND b.added <= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ".(0-$fu->getOpt('_server_tz_offset'))." HOUR)
+	$query = 'SELECT b.*, COUNT(c.comment_id) AS num_comments
+    FROM ' .$fu->getOpt('blog_table'). '  b
+	LEFT JOIN ' .$fu->getOpt('comments_table'). ' c ON b.entry_id=c.entry_id
+	WHERE b.is_public > 0 AND b.added <= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ' .(0-$fu->getOpt('_server_tz_offset')). ' HOUR)
 	GROUP BY b.entry_id
-    ORDER BY b.added DESC LIMIT 20";
+    ORDER BY b.added DESC LIMIT 20';
 
-	$query_added = "SELECT b.added
-	FROM ".$fu->getOpt('blog_table')." b
-	WHERE b.is_public > 0 AND b.added <= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ".(0-$fu->getOpt('_server_tz_offset'))." HOUR)
-	ORDER BY b.added DESC LIMIT 1";
+	$query_added = 'SELECT b.added
+	FROM ' .$fu->getOpt('blog_table'). ' b
+	WHERE b.is_public > 0 AND b.added <= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ' .(0-$fu->getOpt('_server_tz_offset')). ' HOUR)
+	ORDER BY b.added DESC LIMIT 1';
 }
 
 $fu->db->Execute($query_added);
@@ -87,8 +105,7 @@ while ($row = $fu->db->ReadRecord()) {
     $post = new FanUpdate_Post($row, $fu, $fu->getOpt('blog_page'));
 
 	$html_text = $post->getBodyFormatted();
-	$html_text = str_replace('href="/', 'href="'.$_SERVER['SERVER_NAME'].'/', $html_text);
-	$html_text = str_replace('src="/', 'src="'.$_SERVER['SERVER_NAME'].'/', $html_text);
+	$html_text = str_replace(array('href="/', 'src="/'), array('href="' . $_SERVER['SERVER_NAME'] . '/', 'src="' . $_SERVER['SERVER_NAME'] . '/'), $html_text);
 
 	$item = $feed->createNewItem();
   
@@ -127,4 +144,4 @@ while ($row = $fu->db->ReadRecord()) {
 
 $feed->generateFeed();
 
-?>
+

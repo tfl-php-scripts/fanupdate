@@ -1,11 +1,30 @@
 <?php
+/*****************************************************************************
+ * FanUpdate
+ * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
+ * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
-class FanUpdate_Comment {
+class FanUpdate_Comment
+{
+    public $params = array();
+    public $fu;
 
-    var $params = array();
-    var $fu;
-
-    function FanUpdate_Comment($params, &$fu, $self = null) {
+    public function __construct($params, FanUpdate $fu, $self = null)
+    {
         $this->params = $params;
         $this->fu = $fu;
 
@@ -13,7 +32,7 @@ class FanUpdate_Comment {
             $this->params['comment_id'] = 0;
         }
 
-		if (empty($this->params['entry_id'])) {
+        if (empty($this->params['entry_id'])) {
             $this->params['entry_id'] = 0;
         }
 
@@ -37,14 +56,14 @@ class FanUpdate_Comment {
             $this->params['added'] = date('Y-m-d H:i:s');
         }
 
-		if (!empty($self)) {
+        if (!empty($self)) {
             $this->params['link_url'] = $self;
         } else {
             $this->params['link_url'] = $this->fu->GetCleanSelf();
         }
-        $this->params['link_url'] .= '?id='.$this->params['entry_id'].'#comment'.$this->params['comment_id'];
-		
-		if (empty($this->params['points'])) {
+        $this->params['link_url'] .= '?id=' . $this->params['entry_id'] . '#comment' . $this->params['comment_id'];
+
+        if (empty($this->params['points'])) {
             $this->params['points'] = 0;
         }
 
@@ -55,88 +74,98 @@ class FanUpdate_Comment {
         }
     }
 
-    function getID() {
+    public function getID()
+    {
         return $this->params['comment_id'];
     }
 
-	function getEntryID() {
-        return $this->params['entry_id'];
+    public function getLinkUrl()
+    {
+        return $this->params['link_url'];
     }
 
-	function getLinkUrl() {
-		return $this->params['link_url'];
-	}
-
-    function isApproved() {
+    public function isApproved()
+    {
         return $this->params['approved'];
     }
 
-	function getPoints() {
-		return $this->params['points'];
-	}
+    public function getPoints()
+    {
+        return $this->params['points'];
+    }
 
-    function getName() {
+    public function getName()
+    {
         return $this->params['name'];
     }
 
-    function getEmail() {
+    public function getEmail()
+    {
         return $this->params['email'];
     }
 
-    function getUrl() {
+    public function getUrl()
+    {
         return $this->params['url'];
     }
 
-    function getDate() {
+    public function getDate()
+    {
         return $this->params['added'];
     }
 
-    function getDateFormatted($format = false) {
-		if (!$format) {
-			$format = $this->fu->getOpt('date_format');
-		}
+    public function getDateFormatted($format = false)
+    {
+        if (!$format) {
+            $format = $this->fu->getOpt('date_format');
+        }
         return date($format, strtotime($this->params['added']) + ($this->fu->getOpt('timezone_offset') * 3600));
     }
 
-    function getAbstract($words = 10, $doSmile = false) {
+    public function getAbstract($words = 10, $doSmile = false)
+    {
         $text = truncate_wc(strip_tags($this->params['comment']), $words);
-		if ($doSmile) {
-			$text = $this->fu->replaceSmilies($text);
-		}
-		return $text;
+        if ($doSmile) {
+            $text = $this->fu->replaceSmilies($text);
+        }
+        return $text;
     }
 
-    function getBody() {
+    public function getBody()
+    {
         return $this->params['comment'];
     }
 
-    function getBodyFormatted() {
+    public function getBodyFormatted()
+    {
         return wpautop($this->fu->replaceSmilies($this->params['comment']));
     }
 
-    function getCommenterLink() {
+    public function getCommenterLink()
+    {
 
         if (empty($this->params['url'])) {
-            return '<span class="commenter">'.$this->params['name'].'</span>';
-        } else {
-            return '<a class="commenter" href="'.$this->params['url'].'" title="'.$this->params['name'].'&#8217;s website">'.$this->params['name'].'</a>';
+            return '<span class="commenter">' . $this->params['name'] . '</span>';
         }
+
+        return '<a class="commenter" href="' . $this->params['url'] . '" title="' . $this->params['name'] . '&#8217;s website">' . $this->params['name'] . '</a>';
     }
 
-    function getGravatarUrl($size = 80, $rating = 'G', $default = null) {
+    public function getGravatarUrl($size = 80, $rating = 'G', $default = null)
+    {
 
         if ($this->fu->getOpt('gravatar_on')) {
 
-            if ($default == null) {
+            if ($default === null) {
                 $default = $this->fu->getOpt('gravatar_default');
             }
 
             if (is_email($this->params['email'])) {
 
-                $grav_url = 'http://www.gravatar.com/avatar.php?gravatar_id='.md5($this->params['email']).
-                    '&amp;rating='.$rating.
-                    '&amp;default='.urlencode($default).
-                    '&amp;size='.$size;
+                $grav_url = 'http://www.gravatar.com/avatar.php?gravatar_id=' . md5($this->params['email']) .
+                    '&amp;rating=' . $rating .
+                    '&amp;default=' . urlencode($default) .
+                    '&amp;size=' . $size;
 
             } else {
                 $grav_url = $default;
@@ -144,37 +173,33 @@ class FanUpdate_Comment {
 
             return $grav_url;
 
-        } else {
-            return '';
         }
+
+        return '';
     }
 
-    function getGravatar($size = 80, $rating = 'G', $default = null) {
-
+    public function getGravatar($size = 80, $rating = 'G', $default = null)
+    {
         if ($this->fu->getOpt('gravatar_on')) {
 
             $grav_url = $this->getGravatarUrl($size, $rating, $default);
 
-            return '<img class="gravatar" src="'.$grav_url.'" alt="'.$this->params['name'].'&#8217;s gravatar" width="'.$size.'" height="'.$size.'" />';
+            return '<img class="gravatar" src="' . $grav_url . '" alt="' . $this->params['name'] . '&#8217;s gravatar" width="' . $size . '" height="' . $size . '" />';
 
-        } else {
-            return '';
         }
+
+        return '';
     }
 
-    function printComment() {
-
+    public function printComment()
+    {
         $gravatar = $this->getGravatar($this->fu->getOpt('gravatar_size'), $this->fu->getOpt('gravatar_rating'));
 
         $text = str_replace('{{gravatar}}', $gravatar, $this->fu->getOpt('comment_template'));
-        $text = str_replace('{{id}}', $this->getID(), $text);
-        $text = str_replace('{{name}}', $this->getCommenterLink(), $text);
-        $text = str_replace('{{date}}', $this->getDateFormatted(), $text);
-        $text = str_replace('{{body}}', $this->getBodyFormatted(), $text);
+        $text = str_replace(array('{{id}}', '{{name}}'), array($this->getID(), $this->getCommenterLink()), $text);
+        $text = str_replace(array('{{date}}', '{{body}}'), array($this->getDateFormatted(), $this->getBodyFormatted()), $text);
 
         echo $text;
     }
 
-} // end class FanUpdate_Comment
-
-?>
+}

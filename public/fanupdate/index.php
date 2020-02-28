@@ -1,4 +1,23 @@
 <?php
+/*****************************************************************************
+ * FanUpdate
+ * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
+ * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
+*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
+
 
 require_once('blog-config.php');
 require_once('functions.php');
@@ -20,7 +39,7 @@ $fu->getHeader('Dashboard');
 
 // ____________________________________________________________ COMMENTS AWAITING APPROVAL
 
-$query_comments = "SELECT COUNT(comment_id) FROM ".$fu->getOpt('comments_table')." c WHERE c.approved=0 AND c.points >= ".$fu->getOpt('points_pending_threshold', true);
+$query_comments = 'SELECT COUNT(comment_id) FROM ' .$fu->getOpt('comments_table'). ' c WHERE c.approved=0 AND c.points >= ' .$fu->getOpt('points_pending_threshold', true);
 
 $unapproved_comments = $fu->db->GetFirstCell($query_comments);
 
@@ -36,10 +55,10 @@ if ($unapproved_comments > 0) {
 
 <?php
 
-$query_entry_count = "SELECT COUNT(entry_id) FROM ".$fu->getOpt('blog_table')." WHERE is_public>0";
+$query_entry_count = 'SELECT COUNT(entry_id) FROM ' .$fu->getOpt('blog_table'). ' WHERE is_public>0';
 $entry_count = $fu->db->GetFirstCell($query_entry_count);
 
-$query_comment_count = "SELECT COUNT(comment_id) FROM ".$fu->getOpt('comments_table')." WHERE approved > 0";
+$query_comment_count = 'SELECT COUNT(comment_id) FROM ' .$fu->getOpt('comments_table'). ' WHERE approved > 0';
 $comment_count = $fu->db->GetFirstCell($query_comment_count);
 
 ?>
@@ -63,12 +82,12 @@ $comment_count = $fu->db->GetFirstCell($query_comment_count);
 <ul>
 <?php
 
-$query = "SELECT b.*, COUNT(com.comment_id) AS num_comments
-FROM ".$fu->getOpt('blog_table')." b
-LEFT JOIN ".$fu->getOpt('comments_table')." com ON b.entry_id=com.entry_id
+$query = 'SELECT b.*, COUNT(com.comment_id) AS num_comments
+FROM ' .$fu->getOpt('blog_table'). ' b
+LEFT JOIN ' .$fu->getOpt('comments_table'). ' com ON b.entry_id=com.entry_id
 WHERE b.is_public > 0 AND (com.approved>0 OR com.approved IS NULL)
 GROUP BY b.entry_id
-ORDER BY b.added DESC LIMIT 5";
+ORDER BY b.added DESC LIMIT 5';
 
 $fu->db->Execute($query);
 
@@ -89,11 +108,11 @@ while ($row = $fu->db->ReadRecord()) {
 <ul>
 <?php
 
-$query = "SELECT c.*, b.title
-FROM ".$fu->getOpt('comments_table')." c
-JOIN ".$fu->getOpt('blog_table')." b ON c.entry_id=b.entry_id
+$query = 'SELECT c.*, b.title
+FROM ' .$fu->getOpt('comments_table'). ' c
+JOIN ' .$fu->getOpt('blog_table'). ' b ON c.entry_id=b.entry_id
 WHERE c.approved>0
-ORDER BY c.added DESC LIMIT 5";
+ORDER BY c.added DESC LIMIT 5';
 
 $fu->db->Execute($query);
 
@@ -112,12 +131,12 @@ while ($row = $fu->db->ReadRecord()) {
 <div class="col23">
 <?php
 
-$query = "SELECT b.*, COUNT(c.comment_id) AS num_comments
-FROM ".$fu->getOpt('blog_table')." b
-JOIN ".$fu->getOpt('comments_table')." c ON b.entry_id=c.entry_id
+$query = 'SELECT b.*, COUNT(c.comment_id) AS num_comments
+FROM ' .$fu->getOpt('blog_table'). ' b
+JOIN ' .$fu->getOpt('comments_table'). ' c ON b.entry_id=c.entry_id
 WHERE c.approved>0
 GROUP BY b.entry_id
-ORDER BY num_comments DESC LIMIT 5";
+ORDER BY num_comments DESC LIMIT 5';
 
 $fu->db->Execute($query);
 
@@ -142,8 +161,8 @@ if ($fu->db->NumRows() > 0) {
 <div class="col33">
 <?php
 
-$query = "SELECT c.*, COUNT(c.comment_id) AS num_comments
-FROM ".$fu->getOpt('comments_table')." c
+$query = 'SELECT c.*, COUNT(c.comment_id) AS num_comments
+FROM ' .$fu->getOpt('comments_table')." c
 WHERE c.approved>0 AND c.email!='".$fu->getOpt('admin_email')."'
 GROUP BY c.name, c.email
 ORDER BY num_comments DESC LIMIT 5";

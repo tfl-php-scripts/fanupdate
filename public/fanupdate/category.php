@@ -1,4 +1,22 @@
 <?php
+/*****************************************************************************
+ * FanUpdate
+ * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
+ * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
+*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 require_once('blog-config.php');
 require_once('functions.php');
@@ -20,10 +38,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
 
     $sql_id = (int)$_GET['id'];
 
-    $query = "SELECT c.".$fu->getOpt('col_subj')." AS cat_name, co.*
-      FROM ".$fu->getOpt('collective_table')." c
-      LEFT JOIN ".$fu->getOpt('catoptions_table')." co ON c.".$fu->getOpt('col_id')."=co.cat_id
-      WHERE c.".$fu->getOpt('col_id')."=".$sql_id." LIMIT 1";
+    $query = 'SELECT c.' .$fu->getOpt('col_subj'). ' AS cat_name, co.*
+      FROM ' .$fu->getOpt('collective_table'). ' c
+      LEFT JOIN ' .$fu->getOpt('catoptions_table'). ' co ON c.' .$fu->getOpt('col_id'). '=co.cat_id
+      WHERE c.' .$fu->getOpt('col_id'). '=' .$sql_id. ' LIMIT 1';
 
     $fu->db->Execute($query);
 
@@ -63,9 +81,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
                 $sql_id = (int)$clean['cat_id'];
             }
 
-            $query_check = "SELECT COUNT(".$fu->getOpt('col_id').")
-              FROM ".$fu->getOpt('collective_table')."
-              WHERE ".$fu->getOpt('col_subj')."='$sql_cat_name'
+            $query_check = 'SELECT COUNT(' .$fu->getOpt('col_id'). ')
+              FROM ' .$fu->getOpt('collective_table'). '
+              WHERE ' .$fu->getOpt('col_subj')."='$sql_cat_name'
               AND ".$fu->getOpt('col_id')."!=$sql_id";
 
             $num_check = $fu->db->GetFirstCell($query_check);
@@ -92,7 +110,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
 
             if ($_POST['action'] == 'add') {
 
-                $query = "INSERT INTO ".$fu->getOpt('collective_table')." (".$fu->getOpt('col_subj').")
+                $query = 'INSERT INTO ' .$fu->getOpt('collective_table'). ' (' .$fu->getOpt('col_subj').")
                   VALUES ('$sql_cat_name')";
 
                 if ($fu->db->Execute($query)) {
@@ -101,7 +119,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
                     $fu->addSuccess('Category <strong>'.$clean['cat_name'].'</strong> added.');
                     $sql_id = mysql_insert_id();
 
-                    $query = "INSERT INTO ".$fu->getOpt('catoptions_table')." (cat_id, comments_on,
+                    $query = 'INSERT INTO ' .$fu->getOpt('catoptions_table')." (cat_id, comments_on,
                       date_format, gravatar_on, gravatar_default, gravatar_size, gravatar_rating,
                       entry_template, comment_template)
                       VALUEs ($sql_id, $sql_comments_on, '$sql_date_format', $sql_gravatar_on,
@@ -123,16 +141,16 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
 
                 if (!$fu->getOpt('collective_script')) {
 
-                    $query = "UPDATE ".$fu->getOpt('collective_table')."
-                      SET ".$fu->getOpt('col_subj')."='$sql_cat_name'
-                      WHERE ".$fu->getOpt('col_id')."=".$sql_id;
+                    $query = 'UPDATE ' .$fu->getOpt('collective_table'). '
+                      SET ' .$fu->getOpt('col_subj')."='$sql_cat_name'
+                      WHERE ".$fu->getOpt('col_id'). '=' .$sql_id;
 
                     if ($fu->db->Execute($query)) {
                         $fu->addSuccess('Category <strong>'.$clean['cat_name'].'</strong> updated.');
                     }
                 }
 
-                $query = "UPDATE ".$fu->getOpt('catoptions_table')."
+                $query = 'UPDATE ' .$fu->getOpt('catoptions_table')."
                   SET comments_on=$sql_comments_on, date_format='$sql_date_format',
                   gravatar_on=$sql_gravatar_on, gravatar_default='$sql_gravatar_default',
                   gravatar_size='$sql_gravatar_size', gravatar_rating='$sql_gravatar_rating',
@@ -154,19 +172,19 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
 
         $sql_id = (int)$clean['cat_id'];
 
-        $query = "DELETE FROM ".$fu->getOpt('collective_table')." WHERE ".$fu->getOpt('col_id')."=$sql_id";
+        $query = 'DELETE FROM ' .$fu->getOpt('collective_table'). ' WHERE ' .$fu->getOpt('col_id')."=$sql_id";
 
         if ($fu->db->Execute($query)) {
 
             $fu->addSuccess('Category #<strong>'.$clean['cat_id'].'</strong> deleted.');
 
-            $query_cat = "DELETE FROM ".$fu->getOpt('catoptions_table')." WHERE cat_id=$sql_id";
+            $query_cat = 'DELETE FROM ' .$fu->getOpt('catoptions_table')." WHERE cat_id=$sql_id";
 
             if ($fu->db->Execute($query_cat)) {
                 $fu->addSuccess('Category #<strong>'.$clean['cat_id'].'</strong> options deleted.');
             }
 
-            $query_post = "DELETE FROM ".$fu->getOpt('catjoin_table')." WHERE cat_id=$sql_id";
+            $query_post = 'DELETE FROM ' .$fu->getOpt('catjoin_table')." WHERE cat_id=$sql_id";
 
             if ($fu->db->Execute($query_post)) {
                 $fu->addSuccess('Category #<strong>'.$clean['cat_id'].'</strong> post relationships deleted.');
@@ -301,12 +319,12 @@ if ($showform) {
 
 // ____________________________________________________________ LIST Categories
 
-$query = "SELECT ".$fu->getOpt('collective_table').".*,
-  ".$fu->getOpt('col_subj')." AS cname, ".$fu->getOpt('col_id')." AS cid, COUNT(cat_id) AS num
-  FROM ".$fu->getOpt('collective_table')."
-  LEFT JOIN ".$fu->getOpt('catjoin_table')." ON ".$fu->getOpt('col_id')."=cat_id
-  GROUP BY ".$fu->getOpt('col_id')."
-  ORDER BY cname ASC";
+$query = 'SELECT ' .$fu->getOpt('collective_table'). '.*,
+  ' .$fu->getOpt('col_subj'). ' AS cname, ' .$fu->getOpt('col_id'). ' AS cid, COUNT(cat_id) AS num
+  FROM ' .$fu->getOpt('collective_table'). '
+  LEFT JOIN ' .$fu->getOpt('catjoin_table'). ' ON ' .$fu->getOpt('col_id'). '=cat_id
+  GROUP BY ' .$fu->getOpt('col_id'). '
+  ORDER BY cname ASC';
 
 $fu->db->Execute($query);
 
@@ -371,11 +389,11 @@ while ($clean = $fu->db->ReadRecord()) {
 
 $fu->db->FreeResult();
 
-$query = "INSERT INTO ".$fu->getOpt('catoptions_table')." (cat_id)
-  SELECT c.".$fu->getOpt('col_id')."
-  FROM ".$fu->getOpt('collective_table')." c
-  LEFT JOIN ".$fu->getOpt('catoptions_table')." co ON c.".$fu->getOpt('col_id')."=co.cat_id
-  WHERE co.cat_id IS NULL";
+$query = 'INSERT INTO ' .$fu->getOpt('catoptions_table'). ' (cat_id)
+  SELECT c.' .$fu->getOpt('col_id'). '
+  FROM ' .$fu->getOpt('collective_table'). ' c
+  LEFT JOIN ' .$fu->getOpt('catoptions_table'). ' co ON c.' .$fu->getOpt('col_id'). '=co.cat_id
+  WHERE co.cat_id IS NULL';
 
 $fu->db->Execute($query);
 

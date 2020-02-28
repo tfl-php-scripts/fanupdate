@@ -1,4 +1,23 @@
-<div id="fanupdate">
+<?php
+/*****************************************************************************
+ * FanUpdate
+ * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
+ * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
+*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
+?><div id="fanupdate">
 
 <?php
 
@@ -10,7 +29,7 @@ require_once('functions.php');
 $fu =& FanUpdate::instance();
 $fu->addOptFromDb();
 
-$query = "SELECT * FROM ".$fu->getOpt('catoptions_table')." WHERE cat_id=".(int)$listingid." LIMIT 1";
+$query = 'SELECT * FROM ' .$fu->getOpt('catoptions_table'). ' WHERE cat_id=' .(int)$listingid. ' LIMIT 1';
 
 $cat = $fu->db->GetRecord($query);
 
@@ -30,11 +49,11 @@ if (isset($_GET['view']) && $_GET['view'] == 'archive') {
 <h2>Archives</h2>
 <?php
 
-    $query = "SELECT b.entry_id, b.added, b.title
-    FROM ".$fu->getOpt('blog_table')." b
-    JOIN ".$fu->getOpt('catjoin_table')." j ON b.entry_id=j.entry_id
-    WHERE b.is_public > 0 AND b.added <= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ".(0-$fu->getOpt('_server_tz_offset'))." HOUR) AND j.cat_id=".$listingid."
-    ORDER BY b.added DESC";
+    $query = 'SELECT b.entry_id, b.added, b.title
+    FROM ' .$fu->getOpt('blog_table'). ' b
+    JOIN ' .$fu->getOpt('catjoin_table'). ' j ON b.entry_id=j.entry_id
+    WHERE b.is_public > 0 AND b.added <= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ' .(0-$fu->getOpt('_server_tz_offset')). ' HOUR) AND j.cat_id=' .$listingid. '
+    ORDER BY b.added DESC';
 
     $fu->db->Execute($query);
 
@@ -66,15 +85,15 @@ if (isset($_GET['view']) && $_GET['view'] == 'archive') {
 
     $single_page = false;
 
-    $query = "SELECT b.*
-    FROM ".$fu->getOpt('blog_table')." b
-    JOIN ".$fu->getOpt('catjoin_table')." j ON b.entry_id=j.entry_id
-    WHERE b.is_public > 0 AND b.added <= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ".(0-$fu->getOpt('_server_tz_offset'))." HOUR) AND j.cat_id=".$listingid;
+    $query = 'SELECT b.*
+    FROM ' .$fu->getOpt('blog_table'). ' b
+    JOIN ' .$fu->getOpt('catjoin_table'). ' j ON b.entry_id=j.entry_id
+    WHERE b.is_public > 0 AND b.added <= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ' .(0-$fu->getOpt('_server_tz_offset')). ' HOUR) AND j.cat_id=' .$listingid;
 
     if (!empty($_GET['id'])) {
 
         $id = (int)$_GET['id'];
-        $query .= " AND b.entry_id=".$id;
+        $query .= ' AND b.entry_id=' .$id;
 
         $single_page = true;
 
@@ -86,7 +105,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'archive') {
 
     }
 
-    $query .= " ORDER BY b.added DESC";
+    $query .= ' ORDER BY b.added DESC';
 
     if (!empty($q)) {
         echo '<p>Search results for <strong>'.$q."</strong></p>\n";

@@ -1,4 +1,23 @@
 <?php
+/*****************************************************************************
+ * FanUpdate
+ * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
+ * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
+*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
+
 
 require_once('class/SqlConnection.php');
 require_once('class/FanUpdate.php');
@@ -85,8 +104,7 @@ function truncate_wc($phrase, $max_words) {
 }
 
 function fancyamp($text) {
-    $text = str_replace(' & ', ' &amp; ', $text);
-    $text = str_replace(' &amp; ', ' <span class="amp">&amp;</span> ', $text);
+    $text = str_replace(array(' & ', ' &amp; '), array(' &amp; ', ' <span class="amp">&amp;</span> '), $text);
     return $text;
 }
 
@@ -99,7 +117,7 @@ function zeroise($number,$threshold) { // function to add leading zeros when nec
 function antispambot($emailaddy, $mailto=0) {
 	$emailNOSPAMaddy = '';
 	srand ((float) microtime() * 1000000);
-	for ($i = 0; $i < strlen($emailaddy); $i = $i + 1) {
+	for ($i = 0, $iMax = strlen($emailaddy); $i < $iMax; ++$i) {
 		$j = floor(rand(0, 1+$mailto));
 		if ($j==0) {
 			$emailNOSPAMaddy .= '&#'.ord(substr($emailaddy,$i,1)).';';
@@ -130,7 +148,7 @@ function make_clickable($ret) {
 			"'mailto:'.antispambot('$2@$4')"),$ret);
 
 	// this one is not in an array because we need it to run last, for cleanup of accidental links within links
-	$ret = preg_replace("#(<a( [^>]+?>|>))(<a [^>]+?>)([^>]+?)</a></a>#i", "$3$4</a>", $ret);
+	$ret = preg_replace('#(<a( [^>]+?>|>))(<a [^>]+?>)([^>]+?)</a></a>#i', '$3$4</a>', $ret);
 	$ret = trim($ret);
 	return $ret;
 }
@@ -141,15 +159,14 @@ function wptexturize($text) {
 	$output = '';
 	$curl = '';
 	$textarr = preg_split('/(<.*>)/Us', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
-	$stop = count($textarr);
 
-	// if a plugin has provided an autocorrect array, use it
+    // if a plugin has provided an autocorrect array, use it
 	if ( isset($wp_cockneyreplace) ) {
 		$cockney = array_keys($wp_cockneyreplace);
 		$cockneyreplace = array_values($wp_cockneyreplace);
 	} else {
 		$cockney = array("'tain't","'twere","'twas","'tis","'twill","'til","'bout","'nuff","'round","'cause");
-		$cockneyreplace = array("&#8217;tain&#8217;t","&#8217;twere","&#8217;twas","&#8217;tis","&#8217;twill","&#8217;til","&#8217;bout","&#8217;nuff","&#8217;round","&#8217;cause");
+		$cockneyreplace = array('&#8217;tain&#8217;t', '&#8217;twere', '&#8217;twas', '&#8217;tis', '&#8217;twill', '&#8217;til', '&#8217;bout', '&#8217;nuff', '&#8217;round', '&#8217;cause');
 	}
 
 	$static_characters = array_merge(array('---', ' -- ', ' - ', '--', 'xn&#8211;', '...', '``', '\'s', '\'\'', ' (tm)'), $cockney);
@@ -158,25 +175,25 @@ function wptexturize($text) {
 	$dynamic_characters = array('/\'(\d\d(?:&#8217;|\')?s)/', '/(\s|\A|")\'/', '/(\d+)"/', '/(\d+)\'/', '/(\S)\'([^\'\s])/', '/(\s|\A)"(?!\s)/', '/"(\s|\S|\Z)/', '/\'([\s.]|\Z)/', '/(\d+)x(\d+)/');
 	$dynamic_replacements = array('&#8217;$1','$1&#8216;', '$1&#8243;', '$1&#8242;', '$1&#8217;$2', '$1&#8220;$2', '&#8221;$1', '&#8217;$1', '$1&#215;$2');
 
-	for ( $i = 0; $i < $stop; $i++ ) {
- 		$curl = $textarr[$i];
+    foreach ($textarr as $iValue) {
+         $curl = $iValue;
 
-		if (isset($curl{0}) && '<' != $curl{0} && $next) { // If it's not a tag
-			// static strings
-			$curl = str_replace($static_characters, $static_replacements, $curl);
-			// regular expressions
-			$curl = preg_replace($dynamic_characters, $dynamic_replacements, $curl);
-		} elseif (strpos($curl, '<code') !== false || strpos($curl, '<pre') !== false || strpos($curl, '<kbd') !== false || strpos($curl, '<style') !== false || strpos($curl, '<script') !== false) {
-			$next = false;
-		} else {
-			$next = true;
-		}
+        if (isset($curl{0}) && '<' != $curl{0} && $next) { // If it's not a tag
+            // static strings
+            $curl = str_replace($static_characters, $static_replacements, $curl);
+            // regular expressions
+            $curl = preg_replace($dynamic_characters, $dynamic_replacements, $curl);
+        } elseif (strpos($curl, '<code') !== false || strpos($curl, '<pre') !== false || strpos($curl, '<kbd') !== false || strpos($curl, '<style') !== false || strpos($curl, '<script') !== false) {
+            $next = false;
+        } else {
+            $next = true;
+        }
 
-		$curl = preg_replace('/&([^#])(?![a-zA-Z1-4]{1,8};)/', '&amp;$1', $curl);
-		$output .= $curl;
-	}
-	
-	$output = str_replace('&#8212;>', '-->', $output); // fix html comments
+        $curl = preg_replace('/&([^#])(?![a-zA-Z1-4]{1,8};)/', '&amp;$1', $curl);
+        $output .= $curl;
+    }
+
+    $output = str_replace('&#8212;>', '-->', $output); // fix html comments
 	
 	$output = preg_replace('!(<h[1-6][^>]*>)(.*)?(&)(.*)?(</h[1-6]>)!e', "stripslashes('$1'.fancyamp('$2$3$4').'$5')", $output); // fancyamp headings
 	
@@ -188,20 +205,21 @@ function wptexturize($text) {
 // Accepts matches array from preg_replace_callback in wpautop()
 // or a string
 function clean_pre($matches) {
-	if ( is_array($matches) )
-		$text = $matches[1] . $matches[2] . "</pre>";
-	else
-		$text = $matches;
+	if ( is_array($matches) ) {
+        $text = $matches[1] . $matches[2] . "</pre>";
+    }
+	else {
+        $text = $matches;
+    }
 
 	$text = str_replace('<br />', '', $text);
-	$text = str_replace('<p>', "\n", $text);
-	$text = str_replace('</p>', '', $text);
+    $text = str_replace(array('<p>', '</p>'), array("\n", ''), $text);
 
 	return $text;
 }
 
 function wpautop($pee, $br = 1, $allowHeading = false) {
-	$pee = $pee . "\n"; // just to make things a little easier, pad the end
+	$pee .= "\n"; // just to make things a little easier, pad the end
 	$pee = preg_replace('|<br />\s*<br />|', "\n\n", $pee);
 	$pee = str_replace("\r\n", "\n", $pee); // Space things out a little
 	if ($allowHeading) {
@@ -215,23 +233,24 @@ function wpautop($pee, $br = 1, $allowHeading = false) {
 	$pee = preg_replace("/\n\n+/", "\n\n", $pee); // take care of duplicates
 	$pee = preg_replace('/\n?(.+?)(?:\n\s*\n|\z)/s', "<p>$1</p>\n", $pee); // make paragraphs, including one at the end
 	$pee = preg_replace('|<p>\s*?</p>|', '', $pee); // under certain strange conditions it could create a P of entirely whitespace
-	$pee = preg_replace('!<p>([^<]+)\s*?(</(?:div|address|form)[^>]*>)!', "<p>$1</p>$2", $pee);
-	$pee = preg_replace( '|<p>|', "$1<p>", $pee );
-	$pee = preg_replace('!<p>\s*(</?' . $allblocks . '[^>]*>)\s*</p>!', "$1", $pee); // don't pee all over a tag
-	$pee = preg_replace("|<p>(<li.+?)</p>|", "$1", $pee); // problem with nested lists
-	$pee = preg_replace('|<p><blockquote([^>]*)>|i', "<blockquote$1><p>", $pee);
+	$pee = preg_replace('!<p>([^<]+)\s*?(</(?:div|address|form)[^>]*>)!', '<p>$1</p>$2', $pee);
+	$pee = preg_replace( '|<p>|', '$1<p>', $pee );
+	$pee = preg_replace('!<p>\s*(</?' . $allblocks . '[^>]*>)\s*</p>!', '$1', $pee); // don't pee all over a tag
+	$pee = preg_replace('|<p>(<li.+?)</p>|', '$1', $pee); // problem with nested lists
+	$pee = preg_replace('|<p><blockquote([^>]*)>|i', '<blockquote$1><p>', $pee);
 	$pee = str_replace('</blockquote></p>', '</p></blockquote>', $pee);
-	$pee = preg_replace('!<p>\s*(</?' . $allblocks . '[^>]*>)!', "$1", $pee);
-	$pee = preg_replace('!(</?' . $allblocks . '[^>]*>)\s*</p>!', "$1", $pee);
+	$pee = preg_replace('!<p>\s*(</?' . $allblocks . '[^>]*>)!', '$1', $pee);
+	$pee = preg_replace('!(</?' . $allblocks . '[^>]*>)\s*</p>!', '$1', $pee);
 	if ($br) {
 		$pee = preg_replace('/<(script|style).*?<\/\\1>/se', 'stripslashes(str_replace("\n", "<WPPreserveNewline />", "\\0"))', $pee);
 		$pee = preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $pee); // optionally make line breaks
 		$pee = str_replace('<WPPreserveNewline />', "\n", $pee);
 	}
-	$pee = preg_replace('!(</?' . $allblocks . '[^>]*>)\s*<br />!', "$1", $pee);
+	$pee = preg_replace('!(</?' . $allblocks . '[^>]*>)\s*<br />!', '$1', $pee);
 	$pee = preg_replace('!<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)[^>]*>)!', '$1', $pee);
-	if (strpos($pee, '<pre') !== false)
-		$pee = preg_replace_callback('!(<pre.*?>)(.*?)</pre>!is', 'clean_pre', $pee );
+	if (strpos($pee, '<pre') !== false) {
+        $pee = preg_replace_callback('!(<pre.*?>)(.*?)</pre>!is', 'clean_pre', $pee);
+    }
 	$pee = preg_replace( "|\n</p>$|", '</p>', $pee );
 	//$pee = preg_replace( '|(<p>)?<img([^>]*)>(</p>)?|', '<img$2>', $pee ); // no pee img!
 
@@ -396,9 +415,9 @@ function _doLists_callback($matches) {
 	$marker_any = "(?:$marker_ul|$marker_ol)";
 	
 	$list = $matches[1];
-	$list_type = preg_match("/$marker_ul/", $matches[3]) ? "ul" : "ol";
+	$list_type = preg_match("/$marker_ul/", $matches[3]) ? 'ul' : 'ol';
 	
-	$marker_any = ( $list_type == "ul" ? $marker_ul : $marker_ol );
+	$marker_any = ( $list_type == 'ul' ? $marker_ul : $marker_ol );
 	
 	$list .= "\n";
 	$result = processListItems($list, $marker_any);
@@ -469,7 +488,7 @@ function _processListItems_callback($matches) {
 		$item = preg_replace('/\n+$/', '', $item);
 	}
 
-	return "<li>" . $item . "</li>\n";
+	return '<li>' . $item . "</li>\n";
 }
 
-?>
+

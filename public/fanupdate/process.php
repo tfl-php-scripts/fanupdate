@@ -1,4 +1,22 @@
 <?php
+/*****************************************************************************
+ * FanUpdate
+ * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
+ * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
+*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 $clean['entry'] = '';
 $clean['name'] = '';
@@ -36,7 +54,7 @@ if (isset($_POST['submit_comment'])) {
 
         $sql_entry = (int)$clean['entry'];
 
-        $query_check = "SELECT * FROM ".$fu->getOpt('blog_table')." b
+        $query_check = 'SELECT * FROM ' .$fu->getOpt('blog_table')." b
           WHERE entry_id=$sql_entry
           LIMIT 1";
 
@@ -75,13 +93,13 @@ if (isset($_POST['submit_comment'])) {
                     // normalize to lower case
                     $test_comment = strtolower($clean['name'].' '.$clean['email'].' '.$clean['url'].' '.$clean['comment']);
 
-                    $query_check = "SELECT * FROM ".$fu->getOpt('blacklist_table');
+                    $query_check = 'SELECT * FROM ' .$fu->getOpt('blacklist_table');
                     $fu->db->Execute($query_check);
 
                     while ($row = $fu->db->ReadRecord()) {
                         if (strpos($test_comment, $row['badword']) !== false) {
 							if ($fu->getOpt('points_scoring')) {
-                            	$points -= 1;
+                            	--$points;
 							} else {
 								$fu->addErr('Please remove all spammy words from your comment and try again.');
 	                            break;
@@ -136,7 +154,7 @@ if (isset($_POST['submit_comment'])) {
 							
 							// it's a link...
 							if (!empty($clean['url'])) {
-								$points -= 1;
+								--$points;
 								if (strlen($clean['url']) > 35) {
 									$points -= 2;
 								}
@@ -145,7 +163,7 @@ if (isset($_POST['submit_comment'])) {
 							// length of comment
 							$len = strlen($clean['comment']);
 							if (($len > 20) && ($num_links == 0)) {
-								$points += 1;
+								++$points;
 							} elseif ($len < 20) {
 								$points -= 2;
 							}
@@ -154,8 +172,8 @@ if (isset($_POST['submit_comment'])) {
 							if (!empty($clean['email'])) {
 								$sql_email = $fu->db->Escape($clean['email']);
 								
-								$num_approved = $fu->db->GetFirstCell("SELECT COUNT(*) FROM ".$fu->getOpt('comments_table')." WHERE email='$sql_email' AND approved = 1 AND added < DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL -7 DAY)");
-								$num_spam = $fu->db->GetFirstCell("SELECT COUNT(*) FROM ".$fu->getOpt('comments_table')." WHERE email='$sql_email' AND approved = 0 AND added < DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL -7 DAY)");
+								$num_approved = $fu->db->GetFirstCell('SELECT COUNT(*) FROM ' .$fu->getOpt('comments_table')." WHERE email='$sql_email' AND approved = 1 AND added < DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL -7 DAY)");
+								$num_spam = $fu->db->GetFirstCell('SELECT COUNT(*) FROM ' .$fu->getOpt('comments_table')." WHERE email='$sql_email' AND approved = 0 AND added < DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL -7 DAY)");
 
 								$points += $num_approved;
 								$points -= $num_spam;
@@ -200,14 +218,14 @@ if (isset($_POST['submit_comment'])) {
 	                    $sql_email = $fu->db->Escape($clean['email']);
 	                    $sql_url = $fu->db->Escape($clean['url']);
 	                    $sql_comment = $fu->db->Escape($clean['comment']);
-	                    $sql_approved = (int)$clean['approved'];
+	                    $sql_approved = $clean['approved'];
 	                    $sql_added = $fu->db->Escape($clean['added']);
-						$sql_points = (int)$points;
+						$sql_points = $points;
 
 	                    $sql_agent = $fu->db->Escape($_SERVER['HTTP_USER_AGENT']);
 	                    $sql_ip = ip2long($_SERVER['REMOTE_ADDR']);
 
-	                    $query = "INSERT INTO ".$fu->getOpt('comments_table')." (entry_id, name, email, url, comment, approved, added, points)
+	                    $query = 'INSERT INTO ' .$fu->getOpt('comments_table')." (entry_id, name, email, url, comment, approved, added, points)
 	                      VALUES ($sql_entry, '$sql_name', '$sql_email', '$sql_url', '$sql_comment', $sql_approved, '$sql_added', $sql_points)";
 
 	                    $fu->db->Execute($query);
@@ -312,4 +330,4 @@ if (isset($_POST['submit_comment'])) {
 
 }
 
-?>
+
