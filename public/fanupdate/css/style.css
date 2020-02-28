@@ -1,0 +1,636 @@
+/*	FanUpdate 2.2 ADMIN style sheet	*/
+
+* {
+	margin: 0;
+	outline: 0;
+	font-family: Arial, sans-serif;
+	font-size: 1em;
+}
+table, fieldset, form, tr, td, th, caption, legend, img {
+	padding: 0;
+	border: 0;
+	background: transparent;
+}
+table {border-collapse: collapse; width: 100%;}
+em, strong, a {line-height: 1em;}
+pre, code {font-family: monospace;}
+
+body {
+	font-size: 14px;
+	color: #333;
+	background-color: #fff;
+	text-align: center;
+	margin: 0;
+	padding: 0;
+}
+
+/*	====	structure	====	*/
+
+#wrap {
+	margin: 0;
+	padding: 1.5em 4.5em;
+	text-align: left;
+	position: relative;
+}
+
+#header {
+	border-bottom: 1px solid #ddd;
+	padding: 0 0 1em 0;
+}
+
+#main {
+	padding: 0 0 1.5em 0;
+	position: relative;
+}
+
+#main:after, .clearfix:after, .option:after, #preview div:after, ul.catlist:after {
+	content: "."; 
+	display: block; 
+	height: 0; 
+	clear: both; 
+	visibility: hidden;
+}
+/* Hides from IE-mac \*/
+* html #main, html .clearfix, html .option, html #preview div, html ul.catlist {height: 1%;}
+/* End hide from IE-mac */
+
+#comment-submitted {
+	margin: 0 auto;
+	width: 40em;
+}
+
+/*	====	login page	====	*/
+
+#login #wrap {
+	margin: 1.5em auto;
+	width: 30em;
+	background-color: #fff;
+}
+#login #header {
+	border: 0;
+}
+#login h1 {background-position: center;}
+#loginButton {margin: 0 0 0 10.5em;}
+#login input {
+	font-size: 1.5em;
+	max-width: 9em;
+}
+
+/*	====	main nav	====	*/
+
+#nav {
+	position: absolute;
+	top: 50px;
+	right: 0;
+	width: 50%;
+}
+#nav ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+#nav li {
+	padding: 0;
+	display: inline;
+}
+#nav a {
+	display: block;
+	float: left;
+	width: auto;
+	text-decoration: none;
+	margin-left: 1em;
+	line-height: 28px;
+	border-bottom: 2px solid #fff;
+	height: 28px;
+}
+#nav a:hover, #nav a:focus {border-color: #333;}
+#dashboard a.dashboard, #entries a.entries, #comments a.comments, #categories a.categories, #options a.options, #blacklist a.options, #smilies a.options, #templates a.options {
+	color: #0c0;
+	border-color: #0c0;
+}
+
+/*	====	uneven columns	====	*/
+
+.col1 {
+	width: 65%;
+	float: left;
+	clear: left;
+}
+.col2 {
+	width: 33%;
+	float: right;
+	clear: right;
+}
+
+/*	====	2 columns	====	*/
+
+.col12 {
+	width: 47.5%;
+	margin-right: 2.4%;
+	border-right: 1px solid #ddd;
+	padding-right: 2.4%;
+	float: left;
+	clear: both;
+}
+.col22 {
+	width: 47.5%;
+	float: right;
+	clear: right;
+}
+
+/*	====	3 columns	====	*/
+
+.col13, .col23 {
+	width: 30%;
+	margin-right: 2.4%;
+	float: left;
+}
+.col13 {
+	clear: both;
+}
+.col23 {
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	padding-left: 2.4%;
+	padding-right: 2.4%;
+}
+.col33 {
+	width: 30%;
+	float: right;
+}
+.col23, .col33 {
+	padding-top: 1.5em;
+}
+.col23 ul, .col33 ul {
+	padding: 0;
+	list-style-type: none;
+}
+.col23 li, .col33 li {
+	clear: left;
+	margin-bottom: 1.5em;
+}
+.col23 .gravatar, .col33 .gravatar {
+	float: left;
+	clear: left;
+	margin-right: 0.5em;
+}
+
+/*	====	options boxes	====	*/
+
+.option {
+	padding: 0.5em;
+	border-bottom: 1px solid #ddd;
+}
+.option p {margin: 0;}
+.option input {font-size: 1.5em; width: 60%;}
+form .option:first-child {border-top: 1px solid #ddd;}
+
+/*	====	general	====	*/
+
+.amp {
+    font-family: "Times New Roman", serif;
+    font-weight: normal;
+    font-style: italic;
+    font-size: 1.2em;
+    line-height: 0.9em;
+}
+
+.highlight {
+	background: #ff9;
+	font-weight: bold;
+}
+.highlight label {font-weight: bold;}
+
+a {outline: none;}
+a, a:visited {color: #09c;}
+a:hover, a:active, a:focus {color: #333;}
+
+h1 {
+	margin: 0;
+	font-size: 2em;
+	font-weight: normal;
+	text-transform: lowercase;
+	text-align: right;
+	background: url(fanupdate.png) left center no-repeat;
+	height: 72px;
+}
+h1 a {
+	display: block;
+	width: 300px;
+	height: 72px;
+}
+h1 span {display: none;}
+h2 {
+	padding: 0.33em;
+	margin: 0 0 1em 0;
+	font-size: 1.5em;
+	line-height: 1em;
+	font-weight: bold;
+	background-color: #f9f9f9;
+	border: 1px solid #ddd;
+	border-top: 0;
+}
+#preview h2 {
+	padding: 0;
+	border: 0;
+	background-color: transparent;
+	margin: 0;
+}
+h3, caption {
+	color: #333;
+	margin: 0;
+	font-weight: bold;
+	font-size: 1.5em;
+	line-height: 1em;
+	text-align: left;
+}
+h4 {
+	margin: 0;
+	font-size: 1.2em;
+	line-height: 1.25em;
+	font-weight: bold;
+}
+legend {
+	color: #333;
+	margin: 0;
+	font-size: 1em;
+	line-height: 1.5em;
+	font-weight: bold;
+	text-align: left;
+}
+
+p, ol, ul, pre, table {
+	font-size: 1em;
+	margin: 0 0 1.5em 0;
+	line-height: 1.5em;
+}
+
+ul, ol {padding: 0 0 0 3em;}
+blockquote {padding: 0 3em;}
+
+ul {list-style-type: square;}
+
+/*	====	catlist	====	*/
+
+ul.catlist {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+ul.catlist li {
+	width: 50%;
+	float: left;
+	margin: 0 0 0.5em 0;
+}
+ul.catlist input.new {
+	width: 97%;
+}
+
+/*	====	images	====	*/
+
+img {
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+td img, p img {vertical-align: middle;}
+img.gravatar {float: right;}
+
+.feed {
+	background-image: url(feed.png);
+	background-position: center left;
+	background-repeat: no-repeat;
+	padding-left: 18px;
+}
+h3 .feed {
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	text-indent: -9000px;
+	position: absolute;
+	right: 0;
+}
+h3 {position: relative;}
+
+#preview {
+	margin: 0 auto 1em auto;
+	width: 75%;
+}
+#preview div {
+	border: 1px solid #ddd;
+	padding: 0.5em;
+}
+p.success, ul.success {background: #efe;}
+p.error, ul.error {background: #fee;}
+p.success, p.error {padding: 0.5em;}
+ul.success, ul.error {padding: 0.5em 0.5em 0.5em 1.5em;}
+
+.error, .error a {color: #c00;}
+.odd, tr.odd td {background-color: #f9f9f9;}
+
+/*	====	subnav	====	*/
+
+ul.subnav {
+	list-style-type: none;
+	padding: 0;
+	margin: -3.55em 1% 0 0;
+	float: right;
+	width: 47.4%;
+}
+ul.subnav li {
+	display: inline;
+	margin-left: 1em;
+	float: left;
+}
+ul.subnav li:first-child {
+	margin-left: 0;
+}
+ul.subnav li.form {
+	float: right;
+	width: auto;
+}
+ul.subnav form {
+	display: inline;
+}
+ul.subnav input, ul.subnav select {
+	width: 7.5em;
+}
+ul.subnav input.button {
+	width: auto;
+}
+
+/*	====	forms	====	*/
+
+form {margin: 0;}
+
+input[type=submit], input[type=checkbox], input[type=radio], input[type=button], button, label {cursor: pointer;}
+
+form p {margin: 0 0 0.5em 0;}
+
+fieldset {
+	clear: both;
+	border: 0;
+	border-top: 1px solid #ddd;
+	margin: 0 0 1em 0;
+	padding: 0.5em 0 0 0;
+}
+
+fieldset#action {
+	border: 0;
+	padding: 0;
+}
+fieldset#action legend {display: none;}
+
+fieldset p, fieldset ul {margin: 0 0 0.5em 0;}
+
+label {
+	position: relative;
+	float: left;
+	clear: left;
+	display: block;
+	line-height: 1.5em;
+	width: 9em;
+	text-align: right;
+	margin: 0 1.5em 0 0;
+}
+label em {
+	display: block;
+	position: absolute;
+	left: 6.375em;
+	top: 0;
+	color: #C00;
+	font-weight: bold;
+	font-size: 1.5em;
+	line-height: 1em;
+	vertical-align: middle;
+}
+label strong {
+	display: block;
+	position: absolute;
+	left: 17.5em;
+	width: 20em;
+	color: #C00;
+	font-weight: normal;
+}
+label .help {
+	font-size: 0.857em;
+	display: block;
+	width: 30em;
+	text-align: left;
+	line-height: 1.5em;
+	margin: 1.25em 0 0 12.25em;
+}
+
+div.col2 label {width: 7em;}
+#options label {width: 12em;}
+#options label .help {margin-left: 15.75em;}
+#options .update {font-size: 1.5em; margin: 1em 0 1em 9.33em;}
+#options form p {margin: 0;}
+
+#templates label {font-weight: bold;}
+#templates label .help {
+	width: 40em;
+	font-weight: normal;
+	margin: -1.5em 0 0 15.75em;
+}
+#templates .update {margin: 1em 0;}
+
+label.checkbox, #entry-meta label, #comment-meta label, td label, #templates label, #comments .col2 label {
+	float: none;
+	width: auto;
+	text-align: left;
+	display: inline;
+	margin: 0;
+}
+td label {display: block;}
+
+label.checkbox em, #entry-meta label em, #comment-meta label em {
+	display: inline;
+	position: static;
+}
+
+textarea {
+	width: 100%;
+	line-height: 1.5em;
+}
+
+.title label {
+	display: none;
+}
+.title input {
+	font-size: 1.5em;
+	width: 100%;
+}
+
+#action .primary {
+	float: left;
+	width: 50%;
+}
+#action .secondary {
+	float: right;
+	width: 50%;
+	text-align: right;
+}
+
+input[type=submit] {text-transform: capitalize;}
+input[type=checkbox], input[type=radio] {vertical-align: middle;}
+
+/*	====	tables	====	*/
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+tbody {
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+}
+
+table a {text-decoration: none;}
+
+th, td {
+	border: 0;
+	border-bottom: 1px solid #ddd;
+	padding: 0 0.5em;
+	vertical-align: top;
+}
+tfoot td {border: 0;}
+
+thead th {
+	text-align: left;
+	font-weight: bold;
+}
+thead th a {
+	color: #333;
+	text-decoration: none;
+}
+thead th a:hover {
+	color: #09c;
+}
+
+tbody tr:hover th, tbody tr:hover td, tbody tr.odd:hover th, tbody tr.odd:hover td {
+	background-color: #efe;
+}
+
+td.number {
+	text-align: right;
+}
+td.date {
+	text-align: right;
+	white-space: nowrap;
+}
+
+tbody tr:hover td {background-color: #efe;}
+tbody tr td.highlight, tbody tr:hover td.highlight {background-color: #ff9;}
+
+/*	====	pagination	====	*/
+
+.paginate {
+	text-align: center;
+}
+
+.paginate a {
+	padding: 0.125em 0.25em;
+	text-decoration: none;
+	border: 1px solid #ddd;
+}
+.paginate a:hover, .paginate a:focus {
+	background: #09c;
+	border-color: #09c;
+	color: #fff;
+}
+.paginate .here {padding: 0 0.5em;}
+
+/*	====	buttons	====	*/
+
+.edit, .update, .add, .delete, .button, .submit {
+	color: #fff !important;
+	padding: 0 0.25em;
+	border-width: 1px;
+	border-style: solid;
+	background-position: top left;
+	background-repeat: repeat-x;
+	text-transform: capitalize;
+	font-weight: bold;
+	text-decoration: none;
+}
+.edit, .update, .add, .submit {
+	background-color: #0c0;
+	background-image: url(gradient-green.png);
+	border-color: #0c0;
+}
+.button {
+	background-color: #09c;
+	background-image: url(gradient-teal.png);
+	border-color: #09c;
+}
+.delete {
+	background-color: #c00;
+	background-image: url(gradient-red.png);
+	border-color: #c00;
+}
+.edit:hover, .update:hover, .add:hover, .delete:hover, .button:hover, .submit:hover, .edit:focus, .update:focus, .add:focus, .delete:focus, .button:focus, .submit:focus {
+	background-color: #333;
+	background-image: url(gradient-black.png);
+	border-color: #333;
+	color: #fff !important;
+}
+
+/*	====	wysiwygmenu	====	*/
+
+.wysiwygmenu {
+	display: block;
+}
+.wysiwygmenu a {
+	padding: 0.125em 0.25em;
+}
+.wysiwygmenu a:hover {
+	background-color: #ddd;
+}
+
+#primary_action {
+	font-size: 1.5em;
+}
+
+div.archivelink {
+	text-align: right;	
+	margin: 3em 0 0 0;
+}
+
+div.credit {
+	clear: both;
+	text-align: center;
+	margin: 1.5em 0;
+	padding: 0;
+}
+
+div.credit p {
+	margin: 0;
+	font-size: 0.857em;
+}
+
+p.catfile {padding: 0 0 0 3em;}
+
+div.comment {
+	clear: both;
+	padding: 0.5em;
+}
+
+div.comment p {padding: 0 0 0 3em;}
+
+div.comment p.commenter {padding: 0;}
+
+/*	====	newUpdate button	====	*/
+
+#newUpdate {
+	margin-bottom: 2.35em;
+	margin-top: 1em;
+}
+#newUpdate a span {display: none;}
+#newUpdate a {
+	background: url(new-entry-button.png) top left no-repeat;
+	display: block;
+	width: 253px;
+	height: 44px;
+}
+#newUpdate a:active, #newUpdate a:hover, #newUpdate a:focus {background-position: bottom left;}

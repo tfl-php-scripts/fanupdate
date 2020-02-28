@@ -1,0 +1,460 @@
+2008-06-8: FanUpdate 2.2.1
+
+Disallowed auto headings in comments
+
+// ____________________________________________________________
+
+2008-06-3: FanUpdate 2.2.1b2
+
+Fixed comment date bug for MySQL < 4.1
+
+Made non-ajax commenting option
+
+// ____________________________________________________________
+
+2008-06-2: FanUpdate 2.2.1b
+
+Fixed so smiley :/ does not interfere with URLs
+
+Fixed points_pending_threshold zero bug
+
+// ____________________________________________________________
+
+2008-06-01: FanUpdate 2.2
+
+Post-dated entries are not displayed until their actual date,
+so you can schedule posts for the future.
+
+New post date synced to user clock with JS.
+
+Added time zone setting, so you can have dates in your time,
+rather than just your server's.
+
+Added Markdown text parsing for headings and lists.
+
+// ____________________________________________________________
+
+2008-03-19: FanUpdate 2.2b3
+
+Added delete all spam button.
+
+// ____________________________________________________________
+
+2008-03-18: FanUpdate 2.2b2
+
+Only check for updates once a week. More is excessive.
+
+Num links spam check in process.php now run on un-cleaned comments text
+(with a href tags still in place) and counts www. as links (since the 
+auto-linker does). Should catch more spam.
+
+Fixed some bugs in the installer for fresh installations.
+Fixed empty category array error in blog.php (Now it won't yell
+at you if you forget to add categories.)
+Thanks Melissa!
+
+Changed the comment notification email to be more scanable.
+
+Added a few more points test:
+	-2 if ip == hostname
+	-1 for url (it's a link too!)
+
+// ____________________________________________________________
+
+2008-03-16: FanUpdate 2.2b
+
+Added points based spam-blocking to comments
+
+Basic podcasting support:
+Links to iTunes supported media files (mp3, mov, pdf, etc)
+are automatically added as enclosures to RSS feed
+
+Better keyboard support with accesskeys:
+Generally, all admin pages use:
+
+n	new item (for entry, category, blacklist, and smilies)
+s	save changes, add, and update buttons
+p	preview
+x	delete
+q	search input
+
+New and improved admin dashboard
+
+Cuter wysiwyg controls and dynamic category adding on the entry add/edit page.
+Yay for JavaScript!
+
+Many under-the-hood code changes to make maintenance easier
+
+Updated textparsing functions with the newest WordPress ones, with a few modifications:
+wpautop, make_clickable, wptexturize, etc
+
+Added URL validation at Jem's suggestion
+
+Visual tweaks to the admin panel
+
+// ____________________________________________________________
+
+2007-10-30: FanUpdate 2.1.1
+
+BUGFIXES:
+   show-blog.php:
+        - removed duplicate ORDER BY added DESC for month archives
+
+    class/FanUpdate.php
+        - missing echo on line 394 -- thanks Donnie!
+
+    process.php
+        - fixed headers already sent/session conflict
+
+a few minor tweaks (better and more efficient pagination, added categories to admin entries list, etc.)
+
+// ____________________________________________________________
+
+2007-08-25: FanUpdate 2.1
+
+NEW FILES: (new directories and all files inside)
+
+class/
+css/
+docs/
+img/
+js/
+
+CHANGED FILES:
+
+everything!
+
+DELETED FILES: (most moved into sub-directories)
+
+approve-comment.php
+changelog.txt
+fanupdate.js
+fanupdate.png
+fanupdate.svg
+fanupdate-logo.svg
+nav.php
+new-entry-button.png
+new-entry-button.svg
+new-entry-button-active.png
+protect.php
+readme.txt
+show-post.inc.php
+SqlConnection.php
+standardista-table-sorting.js
+style.css
+
+BUGFIXES:
+    comment.php
+        - comments can now be edited (oops!)
+    show-cat.php
+        - RSS link is now correct (c=1 NOT id=1 as before)
+
+NEW FEATURES:
+
+- minor interface tweaks
+
+- reorganized files
+
+- improved pagination
+
+- improved/enhanced javascript functionality
+
+- added smilies
+
+- blacklist and smilies are linked on the options page
+
+// ____________________________________________________________
+
+2007-06-30: FanUpdate 2.0.5
+
+BUGFIXES:
+
+    show-cat.php
+        - added check for is_array($cat) -- should take care of invalid argument warnings
+
+CHANGED FILES:
+
+changelog.txt
+functions.php
+readme.txt
+show-cat.php
+
+// ____________________________________________________________
+
+2007-06-27: FanUpdate 2.0.4
+
+BUGFIXES:
+
+    functions.php
+        - Oops! mis-names the getDateRFC() function; fixed
+
+CHANGED FILES:
+
+changelog.txt
+functions.php
+readme.txt
+
+// ____________________________________________________________
+
+2007-06-26: FanUpdate 2.0.3
+
+BUGFIXES:
+
+    rss.php, rss-comments.php, functions.php
+        - fixed pubDate format
+
+    install.php
+        - only unlink files that exist
+
+    process.php
+        - add http:// to url if not there
+
+CHANGED FILES:
+
+changelog.txt
+functions.php
+install.php
+process.php
+rss.php
+rss-comments.php
+style.css
+
+// ____________________________________________________________
+
+2007-06-24: FanUpdate 2.0.2
+
+BUGFIXES:
+
+    rss.php
+        - fixed typo that was causing problems for single-category feed
+
+    functions.php
+        - fixed problem with default gravatar url
+
+CHANGED FILES:
+
+changelog.txt
+functions.php
+readme.txt
+rss.php
+
+// ____________________________________________________________
+
+2007-06-23: FanUpdate 2.0.1
+
+BUGFIXES:
+
+    get-code.php, options.php
+        - rename old links to add-fl.php to category.php
+
+    functions.php, blog.php, rss.php
+        - fixed poor design of determining entry URL
+
+CHANGED FILES:
+
+blog.php
+changelog.txt
+functions.php
+get-code.php
+options.php
+readme.txt
+rss.php
+
+NEW FILES:
+
+fanupdate.png
+gravatar.png
+
+DELETED FILES:
+
+fanupdate.gif
+gravatar.gif
+
+// ____________________________________________________________
+
+2007-06-20: FanUpdate 2.0 final
+
+CHANGES SINCE BETA 4:
+
+    functions.php
+        - deleted unused code, added support for read more links
+
+    blog.php, comment.php, process.php, blog-config.php
+        - fixed some typos
+
+    readme.txt
+        - minor revisions
+
+    install.php
+        - major bug: I had left out the creation of the category table! fixed now.
+
+Query for those with previous beta verions:
+
+INSERT INTO `blog_options` (
+`optkey` ,
+`optvalue` ,
+`optdesc`
+)
+VALUES (
+'abstract_word_count', '0', 'The number of words to display for post summaries. 0 to turn off.'
+);
+
+// ____________________________________________________________
+
+2007-06-19: FanUpdate 2.0.b4
+CHANGED FILES:
+    blog.php, comment.php, install.php
+        - added pagination
+
+    index.php
+        - fixed top-comment stat -- group by email
+
+    functions.php
+        - changed error reporting a bit; more flexible
+
+    blog.php
+        - added category filter
+
+    show-post.inc.php, show-blog.php
+        - fixed bug with showing 'whole collective' category
+
+    fanupdate.js
+        - fixed AJAX form encoding: escapeURIComponent()
+
+    index.php
+        - changed top commenters stat to group by name AND email
+
+    standardista-table-sorting.js, style.css
+        - added this module for table sorting, tweaked styles to integrate
+
+    index.php, blacklist.php, blog.php, category.php, comment.php
+        - added table summaries to be standards-compliant, blog.php
+
+    install.php
+        - added deletion of old files from 1.5/1.6
+
+RENAMED FILES: (for reference)
+    add-fl.php		=>	category.php
+    blog-admin.php	=>	blog.php
+    comments-admin.php	=>	comment.php
+    admin-wysiwyg.php	=>	wysiwyg-admin.php
+
+DELETE OLD FILES:
+    add-fl.php
+    admin-wysiwyg.php
+    blog-admin.php
+    comments-admin.php
+    path.php
+    formatText.js
+    sortTable.js
+
+Users of previous beta versions, run this query:
+
+INSERT INTO `blog_options` ( `optkey` , `optvalue` , `optdesc` )
+VALUES (
+'num_per_page', '20', 'Number of items displayed per page for pagination.'
+);
+
+// ____________________________________________________________
+
+2007-06-15: FanUpdate 2.0.b3
+CHANGED FILES:
+    protect.php, header.php
+        - added a unique id to the body elemet of every page
+    nav.php
+        - changed navigation to ul
+    approve-commnet.php
+        - tidied up code
+    blog-admin.php, comments-admin.php, get-code.php, style.css
+        - interface tweaks
+    index.php, functions.php, options.php
+        - moved update check to FU method, added 1-day caching
+    show-blog.php, show-cat.php, show-post.inc.php, functions.php, options.php
+        - added template support, a few more wrapper divs in the markup
+    add-fl.php
+        - added support for category-level options (most that were previously set
+          in the PHP snippet, plus templates)
+    wysiwyg.php, admin-wysiwyg.php, fanupdate.js
+        - improved wysiwyg buttons, added link insert
+    process.php, fanupdate.js
+        - improved AJAX commenting, more secure captcha (regenerated with every attempt)
+    blog-config.php
+        - new table, catoptions
+    install.php
+        - updated installer to create new db structure, upgrade support for v1.5
+    readme.txt
+        - updated install procedure, documentation
+
+If you have installed the previous betas, you will need to run these queries to update your DB:
+
+CREATE TABLE blog_catoptions (
+      `cat_id` INT( 6 ) UNSIGNED NULL,
+      `comments_on` TINYINT( 1 ) UNSIGNED NULL,
+      `date_format` VARCHAR( 30 ) NULL,
+      `gravatar_on` TINYINT( 1 ) UNSIGNED NULL,
+      `gravatar_default` VARCHAR( 100 ) NULL,
+      `gravatar_size` VARCHAR( 2 ) NULL,
+      `gravatar_rating` VARCHAR( 2 ) NULL,
+      `entry_template` TEXT NULL ,
+      `comment_template` TEXT NULL ,
+      PRIMARY KEY ( `cat_id` )
+    ) ENGINE = MYISAM;
+
+ALTER TABLE blog_options CHANGE `optvalue` `optvalue` TEXT NOT NULL ,
+CHANGE `optdesc` `optdesc` TEXT NOT NULL;
+
+INSERT INTO blog_options (
+`optkey` ,
+`optvalue` ,
+`optdesc`
+)
+VALUES (
+'entry_template', '<h2><a href=\"{{url}}\" title=\"permanent link to this post\">{{title}}</a></h2>\r\n\r\n<p class=\"catfile\">Posted {{date}}. Filed under {{category}}. {{comment_link}}</p>\r\n\r\n{{body}}', 'See readme.txt for template variables.'
+), (
+'comment_template', '{{gravatar}}\r\n\r\n<p class=\"commenter\">On <a href=\"#comment{{id}}\" title=\"permanent link to this comment\">{{date}}</a> {{name}} said:</p>\r\n\r\n{{body}}', 'See readme.txt for template variables.'
+), (
+'_last_update_check', '2007-06-15', 'PRIVATE: Last time prism-perfect.net was checked for latest release.'
+), (
+'_last_update_version', '1.6', 'PRIVATE: Most recent stable version.'
+);
+
+If all goes well with this package, it will be the public release.
+
+// ____________________________________________________________
+
+2007-06-14: FanUpdate 2.0.beta2
+CHANGED FILES:
+    style.css
+        - tweaked the style some, added shiny new entry button
+    blog-admin.php, comments-admin.php, show-blog.php, show-cat.php
+        - added a search to each
+        - if you installed beta1, you will need to add
+          search indexes with these two queries:
+        ALTER TABLE blog ADD FULLTEXT (title,body);
+        ALTER TABLE blog_comments ADD FULLTEXT (name,comment);
+    install.php
+        - added fulltext indexes to install sequence
+    add-fl.php
+        - moved category php snippet links here, where they make more sense
+    nav.php
+        - since snippet links are moved, now cateories tab appears for all configurations
+    index.php
+        - added some statistics about most frequent commenters and popular posts
+    functions.php
+        - changed version to beta2
+    readme.txt
+        - a few changes to reflect the new locations of features
+
+NEW FILES:
+    new-entry-button.png
+    new-entry-button-active.png
+    new-entry-button.svg
+
+// ____________________________________________________________
+
+2007-06-13: FanUpdate 2.0.beta1 - bugfixes
+CHANGED FILES:
+    blog-admin.php
+        - fixed a bug with assigning categories to new posts
+    install.php
+        - fixed the success message in the installer (this is FU, not CS!)
