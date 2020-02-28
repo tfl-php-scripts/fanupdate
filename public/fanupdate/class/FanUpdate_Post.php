@@ -251,5 +251,4 @@ class FanUpdate_Post
 
         echo $text;
     }
-
 }

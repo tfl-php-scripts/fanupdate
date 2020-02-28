@@ -136,5 +136,4 @@ class FileHandler
 
         return false;
     }
-
 }

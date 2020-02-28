@@ -30,6 +30,9 @@ class FanUpdate
 {
     public $_cfg = array();
     public $_clean_self;
+    /**
+     * @var SqlConnection
+     */
     public $db;
     public $errors = array();
     public $success = array();
@@ -160,7 +163,6 @@ class FanUpdate
 
     public function reportErrors($err = '')
     {
-
         if (!empty($err)) {
             $this->addErr($err);
         }
@@ -592,6 +594,4 @@ class FanUpdate
 
     }
 
-} // end class FanUpdate
-
-?>
+}

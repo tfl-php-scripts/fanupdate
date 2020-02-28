@@ -201,5 +201,4 @@ class FanUpdate_Comment
 
         echo $text;
     }
-
 }

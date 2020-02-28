@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection Annotator */
 /*****************************************************************************
  * FanUpdate
  * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>

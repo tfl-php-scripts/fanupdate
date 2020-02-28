@@ -1,6 +1,7 @@
 <?php
 /*****************************************************************************
  * FanUpdate
+ *
  * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
  * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
  *
@@ -21,7 +22,7 @@
 require_once('blog-config.php');
 require_once('functions.php');
 
-$fu =& FanUpdate::instance();
+$fu = FanUpdate::instance();
 $fu->addOptFromDb();
 $fu->login();
 
@@ -102,7 +103,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
         }
 
         if ($fu->noErr()) {
-
             foreach ($clean['new_cat'] as $val) {
                 $val = clean_input($val);
                 if (!empty($val)) {
@@ -114,7 +114,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
                     if ($fu->db->Execute($query)) {
 
                         $fu->addSuccess('Category <strong>' . $val . '</strong> added.');
-                        $sql_id = mysql_insert_id();
+                        $sql_id = $fu->db->GetLastSequence();
                         $clean['cat'][] = $sql_id;
                         $post->addCategory($sql_id, $val);
 
@@ -141,7 +141,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
                   VALUES ('$sql_title', '$sql_body', $sql_is_public, $sql_comments_on, '$sql_added')";
 
                 if ($fu->db->Execute($query)) {
-                    $sql_id = mysql_insert_id();
+                    $sql_id = $fu->db->GetLastSequence();
                     $fu->addSuccess('Entry <strong>' . $post->getTitle() . '</strong> added.');
                     $showform = false;
 

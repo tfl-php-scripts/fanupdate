@@ -454,7 +454,4 @@ class FeedWriter
             echo '</entry>' . PHP_EOL;
         }
     }
-
-    // End # functions ----------------------------------------------
-
 }

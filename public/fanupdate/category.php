@@ -117,7 +117,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'new') {
 
                     $showform = false;
                     $fu->addSuccess('Category <strong>' . $clean['cat_name'] . '</strong> added.');
-                    $sql_id = mysql_insert_id();
+                    $sql_id = $fu->db->GetLastSequence();
 
                     $query = 'INSERT INTO ' . $fu->getOpt('catoptions_table') . " (cat_id, comments_on,
                       date_format, gravatar_on, gravatar_default, gravatar_size, gravatar_rating,

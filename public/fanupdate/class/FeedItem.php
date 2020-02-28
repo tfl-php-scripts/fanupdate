@@ -188,5 +188,4 @@ class FeedItem
         $attributes = array('url' => $url, 'length' => $length, 'type' => $type);
         $this->addElement('enclosure', '', $attributes);
     }
-
 }

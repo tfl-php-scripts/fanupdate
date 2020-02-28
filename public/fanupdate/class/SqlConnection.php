@@ -457,7 +457,7 @@ class SqlConnection
         }
 
         //check if this function exists
-        if (function_exists('mysql_real_escape_string')) {
+        if (function_exists('mysqli_real_escape_string')) {
             $value = mysqli_real_escape_string($this->_Cnn, $value);
         } //for PHP version < 4.3.0 use addslashes
         else {
@@ -468,5 +468,4 @@ class SqlConnection
 
         return $value;
     }
-
 }
