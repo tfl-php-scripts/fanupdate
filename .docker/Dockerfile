@@ -1,8 +1,8 @@
-FROM php:5.6-apache
+FROM php:7.2-apache
 
 MAINTAINER Scripts.robotess.net
 
-RUN docker-php-ext-install mysql mysqli
+RUN docker-php-ext-install mysqli
 RUN apt-get update &&\
     apt-get install --no-install-recommends --assume-yes --quiet ca-certificates curl git &&\
     rm -rf /var/lib/apt/lists/*

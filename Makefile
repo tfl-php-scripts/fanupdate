@@ -1,4 +1,4 @@
-container=fanupdate-php56-apache
+container=fanupdate-php7-apache
 
 up:
 	docker-compose up -d

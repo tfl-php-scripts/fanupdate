@@ -3,7 +3,6 @@
  * SqlConnection Class for MySQL databases
  *
  * Copyright (c) Jay Pipes http://www.jpipes.com/index.php?/archives/99-MySQL-Connection-Management-in-PHP-How-Not-To-Do-Things.html
- * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
  * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,6 +25,8 @@ class SqlConnection
     private $_user = '';
     private $_pass = '';
     private $_name = '';
+
+    /** @var Mysqli */
     private $_Cnn = false;
     private $_Results = array();
     private $_Res = false;
@@ -92,7 +93,7 @@ class SqlConnection
     }
 
     /**
-     * @return  resource
+     * @return  mysqli_result
      */
     public function GetLastResult()
     {
@@ -145,16 +146,16 @@ class SqlConnection
          * connected.  To reconnect, pass
          * args again
          */
-        if (is_resource($this->_Cnn) && func_num_args() != 4) {
+        if ($this->_Cnn !== false && func_num_args() != 4) {
             return true;
         }
 
-        if (!$this->_Cnn = @mysql_connect($this->_host, $this->_user, $this->_pass)) {
+        if (!$this->_Cnn = @mysqli_connect($this->_host, $this->_user, $this->_pass)) {
             trigger_error('Could not connect to database server.', E_USER_ERROR);
             return false;
         }
 
-        if (!@mysql_select_db($this->_name, $this->_Cnn)) {
+        if (!@mysqli_select_db($this->_Cnn, $this->_name)) {
             trigger_error('Could not connect to specified database on server.', E_USER_ERROR);
             return false;
         }
@@ -183,16 +184,17 @@ class SqlConnection
 
         $this->_NumQueries++;
 
-        if (!$this->_Res = mysql_query($Sql, $this->_Cnn)) {
+        if (!$this->_Res = mysqli_query($this->_Cnn, $Sql)) {
             if ($err_msg !== null) {
-                trigger_error($err_msg . ' ' . mysql_error() . ': ' . $Sql, E_USER_WARNING);
+                trigger_error($err_msg . ' ' . mysqli_error($this->_Cnn) . ': ' . $Sql, E_USER_WARNING);
             }
             return false;
         }
 
-        if (is_resource($this->_Res)) {
+        if ($this->_Res !== false) {
             $this->_Results[] = $this->_Res;
         }
+
         return true;
     }
 
@@ -210,7 +212,7 @@ class SqlConnection
         }
 
         $sql_from = strstr($Sql, 'FROM ');
-        list($sql_from) = explode('ORDER BY ', $sql_from);
+        [$sql_from] = explode('ORDER BY ', $sql_from);
         $count_sql = 'SELECT COUNT(*) ' . $sql_from;
 
         // Figure out the total number of results in DB:
@@ -241,7 +243,6 @@ class SqlConnection
 
     public function PrintPaginate($doNums = true, $nextName = 'Next', $prevName = 'Previous')
     {
-
         if ($this->total_results > $this->max_results) {
 
             // Figure out the total number of pages. Always round up using ceil()
@@ -315,11 +316,10 @@ class SqlConnection
      */
     public function ReadRecord()
     {
-
         if (!$this->GetLastResult()) {
             return false;
         }
-        return mysql_fetch_assoc($this->GetLastResult());
+        return mysqli_fetch_assoc($this->GetLastResult());
     }
 
     // IMPORTANT:
@@ -354,7 +354,7 @@ class SqlConnection
             return array();
         }
 
-        $return = mysql_fetch_assoc($this->GetLastResult());
+        $return = mysqli_fetch_assoc($this->GetLastResult());
         $this->FreeResult();
         return $return;
     }
@@ -386,7 +386,7 @@ class SqlConnection
             return false;
         }
 
-        $row = mysql_fetch_row($this->GetLastResult());
+        $row = mysqli_fetch_row($this->GetLastResult());
         $this->FreeResult();
         return $row[0];
     }
@@ -399,7 +399,7 @@ class SqlConnection
      */
     public function GetLastSequence()
     {
-        return mysql_insert_id($this->_Cnn);
+        return mysqli_insert_id($this->_Cnn);
     }
 
     /**
@@ -410,11 +410,7 @@ class SqlConnection
      */
     public function NumRows()
     {
-        if (is_resource($this->GetLastResult())) {
-            return mysql_num_rows($this->GetLastResult());
-        }
-
-        return 0;
+        return mysqli_num_rows($this->GetLastResult());
     }
 
     /**
@@ -425,22 +421,20 @@ class SqlConnection
      */
     public function AffectedRows()
     {
-        return mysql_affected_rows($this->_Cnn);
+        return mysqli_affected_rows($this->_Cnn);
     }
 
     /**
      * Free result set
      *
-     * @return  bool
+     * @return  void
      * @access  public
      */
     public function FreeResult()
     {
-        if (is_resource($this->GetLastResult())) {
-            return mysql_free_result(array_pop($this->_Results));
+        if ($this->getLastResult() !== null) {
+            mysqli_free_result(array_pop($this->_Results));
         }
-
-        return false;
     }
 
     /**
@@ -464,7 +458,7 @@ class SqlConnection
 
         //check if this function exists
         if (function_exists('mysql_real_escape_string')) {
-            $value = mysql_real_escape_string($value, $this->_Cnn);
+            $value = mysqli_real_escape_string($this->_Cnn, $value);
         } //for PHP version < 4.3.0 use addslashes
         else {
             $value = addslashes($value);

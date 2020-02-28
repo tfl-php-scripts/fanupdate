@@ -2,8 +2,8 @@ version: '3'
 
 services:
   apache:
-    container_name: fanupdate-php56-apache
-    image: fanupdate-php56-apache
+    container_name: fanupdate-php7-apache
+    image: fanupdate-php7-apache
     build:
       context: .
       dockerfile: .docker/Dockerfile
