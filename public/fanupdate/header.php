@@ -3,7 +3,7 @@
  * FanUpdate
  * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
  * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
-*
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2 of the License, or
@@ -23,29 +23,32 @@
 
 <head>
 
-<title><?php if (isset($pageTitle)) { 
-    echo $pageTitle.' | ';
-    $pageID = strtolower(str_replace(' ', '-', $pageTitle));
-} ?>FanUpdate ADMIN</title>
+    <title><?php if (isset($pageTitle)) {
+            echo $pageTitle . ' | ';
+            $pageID = strtolower(str_replace(' ', '-', $pageTitle));
+        } ?>FanUpdate ADMIN</title>
 
-<link rel="stylesheet" type="text/css" media="screen" href="css/style.css" title="FanUpdate <?php echo $this->getOpt('version'); ?>" />
-<link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css"
+          title="FanUpdate <?php echo $this->getOpt('version'); ?>"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="robots" content="noindex,nofollow" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="robots" content="noindex,nofollow"/>
 
-<script src="js/fanupdate.js" type="text/javascript"></script>
-<script src="js/fanupdate-admin.js" type="text/javascript"></script>
-<script src="js/standardista-table-sorting.js" type="text/javascript"></script>
+    <script src="js/fanupdate.js" type="text/javascript"></script>
+    <script src="js/fanupdate-admin.js" type="text/javascript"></script>
+    <script src="js/standardista-table-sorting.js" type="text/javascript"></script>
 
 </head>
 
-<body<?php if (!empty($pageID)) { echo ' id="'.$pageID.'"'; } ?>>
+<body<?php if (!empty($pageID)) {
+    echo ' id="' . $pageID . '"';
+} ?>>
 
 <div id="wrap">
 
-<div id="header">
-<h1><a href="index.php"><span>FanUpdate</span></a></h1>
-</div>
+    <div id="header">
+        <h1><a href="index.php"><span>FanUpdate</span></a></h1>
+    </div>
 
-<div id="main">
+    <div id="main">

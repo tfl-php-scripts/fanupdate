@@ -121,20 +121,20 @@ class FileHandler
             return round($size / (1024 ** ($i = floor(log($size, 1024)))), 2) . $filesizename[$i];
         }
 
-		return 'File Not Found';
-	}
+        return 'File Not Found';
+    }
 
     public function checkExtension($filename)
     {
         $filenameext = $this->getExtension($filename);
 
-		foreach ($this->_allowed_ext as $xValue) {
-			if ($filenameext == $xValue) {
-				return true;
-			}
-		}
+        foreach ($this->_allowed_ext as $xValue) {
+            if ($filenameext == $xValue) {
+                return true;
+            }
+        }
 
-		return false;
+        return false;
     }
 
 }

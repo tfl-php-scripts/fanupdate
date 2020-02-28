@@ -103,8 +103,8 @@ class FeedWriter
     public function setChannelElementsFromArray($elementArray)
     {
         if (!is_array($elementArray)) {
-			return;
-		}
+            return;
+        }
         foreach ($elementArray as $elementName => $content) {
             $this->setChannelElement($elementName, $content);
         }
@@ -134,7 +134,7 @@ class FeedWriter
      */
     public function createNewItem()
     {
-		return new FeedItem($this->version);
+        return new FeedItem($this->version);
     }
 
     /**
@@ -263,13 +263,13 @@ class FeedWriter
         $this->setChannelElement('image', array('title' => $title, 'link' => $link, 'url' => $url));
     }
 
-	/**
-	 * Genarates an UUID
-	 * @param null $key
-	 * @param string $prefix
-	 * @return        string    the formated uuid
-	 * @author        Anis uddin Ahmad <admin@ajaxray.com>
-	 */
+    /**
+     * Genarates an UUID
+     * @param null $key
+     * @param string $prefix
+     * @return        string    the formated uuid
+     * @author        Anis uddin Ahmad <admin@ajaxray.com>
+     */
     public function uuid($key = null, $prefix = '')
     {
         $key = ($key == null) ? uniqid(rand(), true) : $key;
@@ -424,13 +424,13 @@ class FeedWriter
         }
     }
 
-	/**
-	 * Make the starting tag of channels
-	 *
-	 * @access    private
-	 * @param bool $about
-	 * @return    void
-	 */
+    /**
+     * Make the starting tag of channels
+     *
+     * @access    private
+     * @param bool $about
+     * @return    void
+     */
     public function startItem($about = false)
     {
         if ($this->version == RSS2) {

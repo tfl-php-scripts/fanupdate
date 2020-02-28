@@ -81,13 +81,13 @@ $fu->getHeader('Blacklist');
 
 ?>
 
-<h2>Options: Blacklist</h2>
-<ul class="subnav">
-    <li><a href="options.php">Main</a></li>
-    <li><a href="blacklist.php">Blacklist</a></li>
-    <li><a href="smilies.php">Smilies</a></li>
-    <li><a href="templates.php">Templates</a></li>
-</ul>
+    <h2>Options: Blacklist</h2>
+    <ul class="subnav">
+        <li><a href="options.php">Main</a></li>
+        <li><a href="blacklist.php">Blacklist</a></li>
+        <li><a href="smilies.php">Smilies</a></li>
+        <li><a href="templates.php">Templates</a></li>
+    </ul>
 
 <?php
 
@@ -103,11 +103,12 @@ $fu->reportErrors();
 
 ?>
 
-<form action="blacklist.php" method="post">
-    <p><input type="text" id="badword" name="badword" size="20" maxlength="50" accesskey="n"/>
-        <input type="submit" id="action" name="action" value="add" class="add" title="blacklist this word, accesskey s"
-               accesskey="s"/></p>
-</form>
+    <form action="blacklist.php" method="post">
+        <p><input type="text" id="badword" name="badword" size="20" maxlength="50" accesskey="n"/>
+            <input type="submit" id="action" name="action" value="add" class="add"
+                   title="blacklist this word, accesskey s"
+                   accesskey="s"/></p>
+    </form>
 
 <?php
 

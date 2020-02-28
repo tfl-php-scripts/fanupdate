@@ -21,7 +21,7 @@
 require_once('blog-config.php');
 require_once('functions.php');
 
-$fu =& FanUpdate::instance();
+$fu = FanUpdate::instance();
 $fu->addOptFromDb();
 
 require_once('class/FeedWriter.php');
@@ -143,5 +143,3 @@ while ($row = $fu->db->ReadRecord()) {
 }
 
 $feed->generateFeed();
-
-

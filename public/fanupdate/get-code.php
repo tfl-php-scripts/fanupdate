@@ -3,7 +3,7 @@
  * FanUpdate
  * Copyright (c) Jenny Ferenc <jenny@prism-perfect.net>
  * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
-*
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2 of the License, or
@@ -18,11 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-
 require_once('blog-config.php');
 require_once('functions.php');
 
-$fu =& FanUpdate::instance();
+$fu = FanUpdate::instance();
 $fu->addOptFromDb();
 $fu->login();
 
@@ -34,9 +33,9 @@ if (!empty($_GET['id'])) {
 
     $sql_id = (int)$_GET['id'];
 
-    $query = 'SELECT ' .$fu->getOpt('col_subj'). ' AS cat_name
-      FROM ' .$fu->getOpt('collective_table'). '
-      WHERE ' .$fu->getOpt('col_id')."=$sql_id LIMIT 1";
+    $query = 'SELECT ' . $fu->getOpt('col_subj') . ' AS cat_name
+      FROM ' . $fu->getOpt('collective_table') . '
+      WHERE ' . $fu->getOpt('col_id') . "=$sql_id LIMIT 1";
 
     $subject = $fu->db->GetFirstCell($query);
 
@@ -48,15 +47,15 @@ if (!empty($_GET['id'])) {
 
 <div class="col12">
 
-<h2>Display Code</h2>
+    <h2>Display Code</h2>
 
-<p>Edit the variables in this snippet according to the instructions below, then copy an paste it into the PHP-enabled page where you'd like to display the blog for <strong><?php echo $subject; ?></strong>.</p>
+    <p>Edit the variables in this snippet according to the instructions below, then copy an paste it into the
+        PHP-enabled page where you'd like to display the blog for <strong><?php echo $subject; ?></strong>.</p>
 
-<p><textarea cols="90" rows="11">&lt;?php
+    <p><textarea cols="90" rows="11">&lt;?php
 
 // FanUpdate <?php echo $fu->getOpt('version'); ?> blog
 // subject: <?php echo $subject; ?>
-
 
 <?php if (!empty($_GET['id'])) { ?>
 $listingid = <?php echo $sql_id; ?>;
@@ -75,24 +74,26 @@ require_once('<?php echo $fu->getOpt('install_path'); ?>/show-blog.php');
 
 ?&gt;</textarea></p>
 
-<h3>Explanation of Variables</h3>
+    <h3>Explanation of Variables</h3>
 
-<ul>
-<?php if (isset($_GET['id'])) { ?>
-<li><strong>$listingid</strong> is the unique ID for this particular category.</li>
-<?php } ?>
-<li><strong>$main_limit</strong> is the number of posts you'd like displayed on the main updates page.</li>
-</ul>
+    <ul>
+        <?php if (isset($_GET['id'])) { ?>
+            <li><strong>$listingid</strong> is the unique ID for this particular category.</li>
+        <?php } ?>
+        <li><strong>$main_limit</strong> is the number of posts you'd like displayed on the main updates page.</li>
+    </ul>
 
 </div><!-- END .col12 -->
 
 <div class="col22">
 
-<h2>CSS Rules</h2>
+    <h2>CSS Rules</h2>
 
-<p>You may want to include these <abbr title="Cascading Style Sheet">CSS</abbr> rules in your site style sheet if you are using the default templates. You can of course <a href="templates.php">change the templates</a> and/or modify this styling however you see fit.</p>
+    <p>You may want to include these <abbr title="Cascading Style Sheet">CSS</abbr> rules in your site style sheet if
+        you are using the default templates. You can of course <a href="templates.php">change the templates</a> and/or
+        modify this styling however you see fit.</p>
 
-<p><textarea cols="90" rows="16">
+    <p><textarea cols="90" rows="16">
 /*	====	FanUpdate <?php echo $fu->getOpt('version'); ?>	====	*/
 
 div#fanupdate {}
@@ -185,4 +186,4 @@ div.credit p {margin: 0;}
 
 </div><!-- END .col22 -->
 
-<?php $fu->getFooter(); ?>
+<?php $fu->getFooter();
