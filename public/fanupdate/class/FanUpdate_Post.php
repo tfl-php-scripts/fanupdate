@@ -168,9 +168,9 @@ class FanUpdate_Post
 
             if ($this->params['num_comments'] == 1) {
                 return '<a href="' . $this->getCommentsUrl() . '">1 comment</a>.';
-            } else {
-                return '<a href="' . $this->getCommentsUrl() . '">' . $this->params['num_comments'] . ' comments</a>.';
             }
+
+            return '<a href="' . $this->getCommentsUrl() . '">' . $this->params['num_comments'] . ' comments</a>.';
         }
         return '';
     }
@@ -227,7 +227,7 @@ class FanUpdate_Post
 
             if (strpos($this->params['body'], '<!-- MORE -->')) {
 
-                list($this->params['body']) = explode('<!-- MORE -->', $this->params['body'], 2);
+                [$this->params['body']] = explode('<!-- MORE -->', $this->params['body'], 2);
                 $this->params['body'] .= ' ' . $this->getRMLink();
 
             } else if ($this->fu->getOpt('abstract_word_count') > 0) {

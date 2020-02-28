@@ -144,7 +144,7 @@ if (isset($_POST['submit_comment'])) {
 
 							// number of links in comment
 							// check un-cleaned comment (with tags intact)
-							$num_links = preg_match_all('!([\w]+?://|www\.)[\w\#$%&~/.\-;:=,?@\[\]+]+!', $_POST['comment'], $matches);
+							$num_links = preg_match_all('!([\w]+?://|www\.)[\w#$%&~/.\-;:=,?@\[\]+]+!', $_POST['comment'], $matches);
 
 							if ($num_links > 2) {
 								$points -= $num_links;
@@ -199,8 +199,8 @@ if (isset($_POST['submit_comment'])) {
 	                    $clean['comment'] = str_replace('[/Q]', '</blockquote>', $clean['comment']);
 
 						// Require that bbcode links be valid URLS -- no XSS -- thanks for the heads up, Jem!
-	                    $clean['comment'] = preg_replace( "!\[URL=([\w]+?://[\w\#$%&~/.\-;:=,?@\[\]+]+)\](.*?)\[\/URL\]!", "<a href=\"\\1\">\\2</a>", $clean['comment'] );
-	                    $clean['comment'] = preg_replace("!\[URL\]([\w]+?://[\w\#$%&~/.\-;:=,?@\[\]+]+)\[\/URL\]!", "<a href=\"\\1\">\\1</a>", $clean['comment'] );
+	                    $clean['comment'] = preg_replace( "!\[URL=([\w]+?://[\w#$%&~/.\-;:=,?@\[\]+]+)](.*?)\[/URL]!", "<a href=\"\\1\">\\2</a>", $clean['comment'] );
+	                    $clean['comment'] = preg_replace("!\[URL]([\w]+?://[\w#$%&~/.\-;:=,?@\[\]+]+)\[/URL]!", "<a href=\"\\1\">\\1</a>", $clean['comment'] );
 
 	                    if ($clean['remember_me'] == 'y') {
 
@@ -308,7 +308,7 @@ if (isset($_POST['submit_comment'])) {
     
     if ($_POST['submit_comment'] != 'ajax') {
 		if ($clean['approved'] > 0) {
-			list($return) = explode('#', $clean['returnto']);
+			[$return] = explode('#', $clean['returnto']);
 			header('Location: '.$return.'#comment'.$clean['comment_id']);
 		}
 		

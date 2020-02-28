@@ -99,12 +99,12 @@ class FileHandler
     public function fixFilename($orig_name)
     {
         $orig_name = str_replace(' ', '_', $orig_name);
-        return preg_replace('/[^-_\.0-9a-zA-Z]/', '', $orig_name);
+        return preg_replace('/[^-_.0-9a-zA-Z]/', '', $orig_name);
     }
 
     public function getDimensions($path)
     {
-        list($width, $height) = getimagesize($path);
+        [$width, $height] = getimagesize($path);
         return $width . 'x' . $height;
     }
 

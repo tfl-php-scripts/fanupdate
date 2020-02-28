@@ -153,7 +153,7 @@ class FeedItem
             }
         } elseif ($this->version == ATOM) {
             $this->addElement('link', '', array('href' => $link));
-            $this->addElement('id', FeedWriter::uuid($link, 'urn:uuid:'));
+            $this->addElement('id', (new FeedWriter)->uuid($link, 'urn:uuid:'));
         }
     }
 

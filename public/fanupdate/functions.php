@@ -96,7 +96,7 @@ function is_url($url) {
 // ________________________________________ TEXT PARSING
 
 function truncate_wc($phrase, $max_words) {
-    $phrase_array = preg_split('/\n|\ /',$phrase);
+    $phrase_array = preg_split('/[\n ]/',$phrase);
     if (count($phrase_array) > $max_words && $max_words > 0) {
         $phrase = implode(' ', array_slice($phrase_array, 0, $max_words)).'&#8230;';
     }
@@ -138,14 +138,22 @@ function make_clickable($ret) {
 	$ret = preg_replace(
 		array(
 			'#([\s>])([\w]+?://[\w\#$%&~/.\-;:=,?@\[\]+]+)#is',
-			'#([\s>])((www|ftp)\.[\w\#$%&~/.\-;:=,?@\[\]+]+)#is',
-			'!([\s>])([a-z0-9\-_.]+)(@)([a-zA-Z0-9\-.]+\.[a-z]{2,4})!ie',
-			'!(mailto:)([a-z0-9\-_.]+)(@)([a-z0-9\-.]+\.[a-z]{2,4})!ie'),
+			'#([\s>])((www|ftp)\.[\w\#$%&~/.\-;:=,?@\[\]+]+)#is'),
 		array(
 			'$1<a href="$2">$2</a>',
-			'$1<a href="http://$2">$2</a>',
-			"'$1<a href=\"mailto:'.antispambot('$2@$4').'\">'.antispambot('$2@$4').'</a>'",
-			"'mailto:'.antispambot('$2@$4')"),$ret);
+			'$1<a href="http://$2">$2</a>'),$ret);
+
+    $ret = preg_replace_callback('!([\s>])([a-z0-9\-_.]+)(@)([a-zA-Z0-9\-.]+\.[a-z]{2,4})!i',
+        static function ($matches) {
+            $antispammed = antispambot($matches[2] . '@' . $matches[4]);
+            return $matches[1] . '<a href="mailto:' . $antispammed . '">' . $antispammed . '</a>';
+        }, $ret);
+
+    $ret = preg_replace_callback('!(mailto:)([a-z0-9\-_.]+)(@)([a-z0-9\-.]+\.[a-z]{2,4})!i',
+        static function ($matches) {
+            $antispammed = antispambot($matches[2] . '@' . $matches[4]);
+            return 'mailto:'.$antispammed;
+        }, $ret);
 
 	// this one is not in an array because we need it to run last, for cleanup of accidental links within links
 	$ret = preg_replace('#(<a( [^>]+?>|>))(<a [^>]+?>)([^>]+?)</a></a>#i', '$3$4</a>', $ret);
@@ -195,7 +203,10 @@ function wptexturize($text) {
 
     $output = str_replace('&#8212;>', '-->', $output); // fix html comments
 	
-	$output = preg_replace('!(<h[1-6][^>]*>)(.*)?(&)(.*)?(</h[1-6]>)!e', "stripslashes('$1'.fancyamp('$2$3$4').'$5')", $output); // fancyamp headings
+	$output = preg_replace_callback('!(<h[1-6][^>]*>)(.*)?(&)(.*)?(</h[1-6]>)!',
+        static function ($matches) {
+            return stripslashes($matches[1] . fancyamp($matches[2] . $matches[3] . $matches[4]) . $matches[5]);
+        }, $output); // fancyamp headings
 	
 	$output = preg_replace('!([0-9]+)(st|nd|rd|th)!', '$1<sup>$2</sup>', $output); // superscripts
 
@@ -206,7 +217,7 @@ function wptexturize($text) {
 // or a string
 function clean_pre($matches) {
 	if ( is_array($matches) ) {
-        $text = $matches[1] . $matches[2] . "</pre>";
+        $text = $matches[1] . $matches[2] . '</pre>';
     }
 	else {
         $text = $matches;
@@ -242,7 +253,10 @@ function wpautop($pee, $br = 1, $allowHeading = false) {
 	$pee = preg_replace('!<p>\s*(</?' . $allblocks . '[^>]*>)!', '$1', $pee);
 	$pee = preg_replace('!(</?' . $allblocks . '[^>]*>)\s*</p>!', '$1', $pee);
 	if ($br) {
-		$pee = preg_replace('/<(script|style).*?<\/\\1>/se', 'stripslashes(str_replace("\n", "<WPPreserveNewline />", "\\0"))', $pee);
+        $pee = preg_replace_callback('/<(script|style).*?<\/\\1>/s',
+            static function () {
+                return stripslashes(str_replace("\n", '<WPPreserveNewline />', "\\0"));
+            }, $pee);
 		$pee = preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $pee); // optionally make line breaks
 		$pee = str_replace('<WPPreserveNewline />', "\n", $pee);
 	}
@@ -473,9 +487,9 @@ function processListItems($list_str, $marker_any) {
 }
 function _processListItems_callback($matches) {
 	$item = $matches[4];
-	$leading_line =& $matches[1];
-	$leading_space =& $matches[2];
-	$tailing_blank_line =& $matches[5];
+	$leading_line = $matches[1];
+	$leading_space = $matches[2];
+	$tailing_blank_line = $matches[5];
 
 	if ($leading_line || $tailing_blank_line || 
 		preg_match('/\n{2,}/', $item))

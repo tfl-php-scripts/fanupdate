@@ -323,7 +323,7 @@ if ($version_installed == 0) {
 
     // ___________________________________________ create blog table
 
-    $query = "CREATE TABLE ".$fu->getOpt('blog_table')." (
+    $query = 'CREATE TABLE ' .$fu->getOpt('blog_table')." (
       `entry_id` int(6) unsigned NOT NULL AUTO_INCREMENT,
       `added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
       `title` varchar(50) NOT NULL DEFAULT '',
@@ -342,7 +342,7 @@ if ($version_installed == 0) {
 
     // ___________________________________________ create comments table
 
-    $query = "CREATE TABLE ".$fu->getOpt('comments_table')." (
+    $query = 'CREATE TABLE ' .$fu->getOpt('comments_table')." (
       `comment_id` int(6) unsigned NOT NULL AUTO_INCREMENT,
       `entry_id` int(6) unsigned NOT NULL DEFAULT '0',
       `name` varchar(30) NOT NULL DEFAULT '',
@@ -367,11 +367,11 @@ if ($version_installed == 0) {
     // ___________________________________________ create category table
 
     if (!$fu->getOpt('collective_script')) {
-        $query = "CREATE TABLE ".$fu->getOpt('collective_table')." (
-          `".$fu->getOpt('col_id')."` int(6) unsigned NOT NULL AUTO_INCREMENT,
-          `".$fu->getOpt('col_subj')."` varchar(50) NOT NULL DEFAULT '',
-          PRIMARY KEY (`".$fu->getOpt('col_id')."`)
-        ) ENGINE=MyISAM";
+        $query = 'CREATE TABLE ' .$fu->getOpt('collective_table'). ' (
+          `' .$fu->getOpt('col_id'). '` int(6) unsigned NOT NULL AUTO_INCREMENT,
+          `' .$fu->getOpt('col_subj')."` varchar(50) NOT NULL DEFAULT '',
+          PRIMARY KEY (`".$fu->getOpt('col_id'). '`)
+        ) ENGINE=MyISAM';
 
         if ($fu->db->Execute($query)) {
             $fu->AddSuccess('Table <strong>'.$fu->getOpt('collective_table').'</strong> created.');
@@ -387,7 +387,7 @@ if (version_compare($version_installed, 1.5, '<=')) {
 
     // ___________________________________________ create blog2category table
 
-    $query = "CREATE TABLE ".$fu->getOpt('catjoin_table')." (
+    $query = 'CREATE TABLE ' .$fu->getOpt('catjoin_table')." (
       `entry_id` int(6) unsigned NOT NULL DEFAULT '0',
       `cat_id` int(6) unsigned NOT NULL DEFAULT '0',
       PRIMARY KEY (`entry_id`,`cat_id`)
@@ -406,14 +406,14 @@ if (version_compare($version_installed, 1.5, '=')) {
 
     // ___________________________________________ convert 1.5 blog to new category scheme
 
-    $query = "SELECT * FROM ".$fu->getOpt('blog_table');
+    $query = 'SELECT * FROM ' .$fu->getOpt('blog_table');
 
     if ($fu->db->Execute($query)) {
         while ($row = $fu->db->ReadRecord()) {
             $id = $row['id'];
             $listingid = $row['listingid'];
 
-            $query = "INSERT INTO ".$fu->getOpt('catjoin_table')." (entry_id,cat_id) VALUES ($id,$listingid)";
+            $query = 'INSERT INTO ' .$fu->getOpt('catjoin_table')." (entry_id,cat_id) VALUES ($id,$listingid)";
         }
         $fu->db->FreeResult();
         $fu->AddSuccess('Category relationships transfered.');
@@ -421,7 +421,7 @@ if (version_compare($version_installed, 1.5, '=')) {
         $fu->AddErr('Category relationships not transfered!');
     }
 
-    $query = "ALTER TABLE ".$fu->getOpt('blog_table')." DROP `listingid`";
+    $query = 'ALTER TABLE ' .$fu->getOpt('blog_table'). ' DROP `listingid`';
 
     if ($fu->db->Execute($query)) {
         $fu->AddSuccess('Listingid column dropped.');
@@ -430,7 +430,7 @@ if (version_compare($version_installed, 1.5, '=')) {
     }
 
     if (!$fu->getOpt('collective_script')) {
-        $query = "ALTER TABLE ".$fu->getOpt('collective_table')." DROP INDEX `fl_id`, ADD PRIMARY KEY ( `fl_id` )";
+        $query = 'ALTER TABLE ' .$fu->getOpt('collective_table'). ' DROP INDEX `fl_id`, ADD PRIMARY KEY ( `fl_id` )';
 
         if ($fu->db->Execute($query)) {
             $fu->AddSuccess('Old index fl_id changed to PK.');
@@ -447,9 +447,9 @@ if ($version_installed > 0 && version_compare($version_installed, 1.6, '<=')) {
     // ___________________________________________ modify old category table scheme
 
     if (!$fu->getOpt('collective_script')) {
-        $query = "ALTER TABLE ".$fu->getOpt('collective_table')."
-			CHANGE `fl_id` `".$fu->getOpt('col_id')."` INT( 6 ) UNSIGNED NOT NULL AUTO_INCREMENT,
-			CHANGE `fl_subject` `".$fu->getOpt('col_subj')."` VARCHAR( 50 ) NOT NULL DEFAULT ''";
+        $query = 'ALTER TABLE ' .$fu->getOpt('collective_table'). '
+			CHANGE `fl_id` `' .$fu->getOpt('col_id'). '` INT( 6 ) UNSIGNED NOT NULL AUTO_INCREMENT,
+			CHANGE `fl_subject` `' .$fu->getOpt('col_subj')."` VARCHAR( 50 ) NOT NULL DEFAULT ''";
 
         if ($fu->db->Execute($query)) {
             $fu->AddSuccess('Old table <strong>'.$fu->getOpt('collective_table').'</strong> modified.');
@@ -460,7 +460,7 @@ if ($version_installed > 0 && version_compare($version_installed, 1.6, '<=')) {
 
     // ___________________________________________ modify old blog table scheme
 
-    $query = "ALTER TABLE ".$fu->getOpt('blog_table')."
+    $query = 'ALTER TABLE ' .$fu->getOpt('blog_table')."
       ADD `is_public` TINYINT( 1 ) NOT NULL DEFAULT '1',
       ADD `comments_on` TINYINT( 1 ) NOT NULL DEFAULT '1',
       ADD FULLTEXT (title,body),
@@ -475,7 +475,7 @@ if ($version_installed > 0 && version_compare($version_installed, 1.6, '<=')) {
         $fu->AddErr('Old table <strong>'.$fu->getOpt('blog_table').'</strong> not modified!');
     }
 
-    $query = "UPDATE ".$fu->getOpt('blog_table')." SET `added`=FROM_UNIXTIME(`timestamp`)";
+    $query = 'UPDATE ' .$fu->getOpt('blog_table'). ' SET `added`=FROM_UNIXTIME(`timestamp`)';
 
     if ($fu->db->Execute($query)) {
         $fu->AddSuccess('Timestamps converted to datetime');
@@ -483,7 +483,7 @@ if ($version_installed > 0 && version_compare($version_installed, 1.6, '<=')) {
         $fu->AddErr('Timestamps not converted to datetime!');
     }
 
-    $query = "ALTER TABLE ".$fu->getOpt('blog_table')." DROP `timestamp`";
+    $query = 'ALTER TABLE ' .$fu->getOpt('blog_table'). ' DROP `timestamp`';
 
     if ($fu->db->Execute($query)) {
         $fu->AddSuccess('Timestamp column dropped.');
@@ -493,7 +493,7 @@ if ($version_installed > 0 && version_compare($version_installed, 1.6, '<=')) {
 
     // ___________________________________________ modify old comment table scheme
 
-    $query = "ALTER TABLE ".$fu->getOpt('comments_table')."
+    $query = 'ALTER TABLE ' .$fu->getOpt('comments_table')."
       ADD FULLTEXT (name,comment),
       CHANGE `id` `comment_id` INT( 6 ) UNSIGNED NOT NULL AUTO_INCREMENT ,
       CHANGE `entry` `entry_id` INT( 6 ) UNSIGNED NOT NULL DEFAULT '0',
@@ -506,7 +506,7 @@ if ($version_installed > 0 && version_compare($version_installed, 1.6, '<=')) {
         $fu->AddErr('Old table <strong>'.$fu->getOpt('comments_table').'</strong> not modified!');
     }
 
-    $query = "UPDATE ".$fu->getOpt('comments_table')." SET `added`=FROM_UNIXTIME(`timestamp`)";
+    $query = 'UPDATE ' .$fu->getOpt('comments_table'). ' SET `added`=FROM_UNIXTIME(`timestamp`)';
 
     if ($fu->db->Execute($query)) {
         $fu->AddSuccess('Timestamps converted to datetime');
@@ -514,7 +514,7 @@ if ($version_installed > 0 && version_compare($version_installed, 1.6, '<=')) {
         $fu->AddErr('Timestamps not converted to datetime!');
     }
 
-    $query = "ALTER TABLE ".$fu->getOpt('comments_table')." DROP `timestamp`";
+    $query = 'ALTER TABLE ' .$fu->getOpt('comments_table'). ' DROP `timestamp`';
 
     if ($fu->db->Execute($query)) {
         $fu->AddSuccess('Timestamp column dropped.');
@@ -528,12 +528,12 @@ if ($version_installed > 0 && version_compare($version_installed, 1.6, '<=')) {
 
     // ___________________________________________ modify old blog2category table scheme
 
-        $query = "ALTER TABLE ".$fu->getOpt('catjoin_table')."
+        $query = 'ALTER TABLE ' .$fu->getOpt('catjoin_table'). '
           DROP `id`,
           DROP INDEX `entry`,
           CHANGE `entry` `entry_id` INT( 6 ) UNSIGNED NOT NULL,
           CHANGE `listingid` `cat_id` INT( 6 ) UNSIGNED NOT NULL,
-          ADD PRIMARY KEY ( `entry_id` , `cat_id` )";
+          ADD PRIMARY KEY ( `entry_id` , `cat_id` )';
 
         if ($fu->db->Execute($query)) {
             $fu->AddSuccess('Old table <strong>'.$fu->getOpt('catjoin_table').'</strong> modified.');
@@ -544,7 +544,7 @@ if ($version_installed > 0 && version_compare($version_installed, 1.6, '<=')) {
 
     // ___________________________________________ delete old options table
 
-    $query = "DROP TABLE ".$fu->getOpt('options_table');
+    $query = 'DROP TABLE ' .$fu->getOpt('options_table');
 
     if ($fu->db->Execute($query)) {
         $fu->AddSuccess('Old table <strong>'.$fu->getOpt('options_table').'</strong> dropped.');
@@ -559,12 +559,12 @@ if (version_compare($version_installed, 2.0, '<=')) {
 
     // ___________________________________________ create new options table
 
-    $query = "CREATE TABLE ".$fu->getOpt('options_table')." (
+    $query = 'CREATE TABLE ' .$fu->getOpt('options_table'). ' (
       `optkey` varchar(30) NOT NULL,
       `optvalue` TEXT NOT NULL,
       `optdesc` TEXT NOT NULL,
       PRIMARY KEY (`optkey`)
-    ) ENGINE=MyISAM";
+    ) ENGINE=MyISAM';
 
     if ($fu->db->Execute($query)) {
         $fu->AddSuccess('Table <strong>'.$fu->getOpt('options_table').'</strong> created.');
@@ -574,10 +574,10 @@ if (version_compare($version_installed, 2.0, '<=')) {
 
     // ___________________________________________ create blacklist table
 
-    $query = "CREATE TABLE ".$fu->getOpt('blacklist_table')." (
+    $query = 'CREATE TABLE ' .$fu->getOpt('blacklist_table'). ' (
       `badword` varchar(50) NOT NULL,
       PRIMARY KEY (`badword`)
-    ) ENGINE=MyISAM";
+    ) ENGINE=MyISAM';
 
     if ($fu->db->Execute($query)) {
         $fu->AddSuccess('Table <strong>'.$fu->getOpt('blacklist_table').'</strong> created.');
@@ -585,7 +585,7 @@ if (version_compare($version_installed, 2.0, '<=')) {
         $fu->AddErr('Table <strong>'.$fu->getOpt('blacklist_table').'</strong> not created!');
     }
 
-    $query = "INSERT INTO ".$fu->getOpt('blacklist_table')." (`badword`) VALUES 
+    $query = 'INSERT INTO ' .$fu->getOpt('blacklist_table')." (`badword`) VALUES 
       ('blackjack'),
       ('casino'),
       ('cialis'),
@@ -608,7 +608,7 @@ if (version_compare($version_installed, 2.0, '<=')) {
 
     // ___________________________________________ create category options table
 
-    $query = "CREATE TABLE ".$fu->getOpt('catoptions_table')." (
+    $query = 'CREATE TABLE ' .$fu->getOpt('catoptions_table'). ' (
       `cat_id` INT( 6 ) UNSIGNED NULL,
       `comments_on` TINYINT( 1 ) UNSIGNED NULL,
       `date_format` VARCHAR( 30 ) NULL,
@@ -619,7 +619,7 @@ if (version_compare($version_installed, 2.0, '<=')) {
       `entry_template` TEXT NULL ,
       `comment_template` TEXT NULL ,
       PRIMARY KEY ( `cat_id` )
-    ) ENGINE = MYISAM";
+    ) ENGINE = MYISAM';
 
     if ($fu->db->Execute($query)) {
         $fu->AddSuccess('Table <strong>'.$fu->getOpt('catoptions_table').'</strong> created.');
@@ -634,7 +634,7 @@ if ($version_installed > 0 && version_compare($version_installed, 2.1, '<')) {
 
     // ___________________________________________ clean up blog2category table
 
-    $query = "DELETE j.* FROM ".$fu->getOpt('catjoin_table')." j LEFT JOIN ".$fu->getOpt('collective_table')." c ON j.cat_id=c.".$fu->getOpt('col_id')." WHERE c.".$fu->getOpt('col_id')." IS NULL";
+    $query = 'DELETE j.* FROM ' .$fu->getOpt('catjoin_table'). ' j LEFT JOIN ' .$fu->getOpt('collective_table'). ' c ON j.cat_id=c.' .$fu->getOpt('col_id'). ' WHERE c.' .$fu->getOpt('col_id'). ' IS NULL';
 
     if ($fu->db->Execute($query)) {
         $fu->AddSuccess('<strong>'.$fu->db->AffectedRows().'</strong> old post relations for deleted categories cleaned up.');
@@ -649,11 +649,11 @@ if (version_compare($version_installed, 2.1, '<')) {
 
     // ___________________________________________ create smilies table
 
-    $query = "CREATE TABLE ".$fu->getOpt('smilies_table')." (
+    $query = 'CREATE TABLE ' .$fu->getOpt('smilies_table'). ' (
       `smiley` VARCHAR( 10 ) NOT NULL,
       `image` VARCHAR( 50 ) NOT NULL,
       PRIMARY KEY (`smiley`)
-    ) ENGINE = MYISAM";
+    ) ENGINE = MYISAM';
 
     if ($fu->db->Execute($query)) {
         $fu->AddSuccess('Table <strong>'.$fu->getOpt('smilies_table').'</strong> created.');
@@ -661,7 +661,7 @@ if (version_compare($version_installed, 2.1, '<')) {
         $fu->AddErr('Table <strong>'.$fu->getOpt('smilies_table').'</strong> not created!');
     }
 
-    $query = "INSERT INTO ".$fu->getOpt('smilies_table')." (`smiley`, `image`) VALUES 
+    $query = 'INSERT INTO ' .$fu->getOpt('smilies_table')." (`smiley`, `image`) VALUES 
       (':)', 'emoticon_smile.png'),
       (':D', 'emoticon_grin.png'),
       ('XD', 'emoticon_evilgrin.png'),
@@ -683,7 +683,7 @@ if ($version_installed > 0 && version_compare($version_installed, '2.2b', '<')) 
 
 	// ___________________________________________ rename some stupid option names
 
-	$query = "UPDATE ".$fu->getOpt('options_table')." SET optkey='site_name' WHERE optkey='collective_name'";
+	$query = 'UPDATE ' .$fu->getOpt('options_table')." SET optkey='site_name' WHERE optkey='collective_name'";
 
 	if ($fu->db->Execute($query)) {
         $fu->AddSuccess('Updated option name for <strong>site_name</strong>');
@@ -691,7 +691,7 @@ if ($version_installed > 0 && version_compare($version_installed, '2.2b', '<')) 
         $fu->AddErr('Failed to update option name for <strong>site_name</strong>.');
     }
 
-	$query = "UPDATE ".$fu->getOpt('options_table')." SET optkey='blog_page' WHERE optkey='collective_updates_page'";
+	$query = 'UPDATE ' .$fu->getOpt('options_table')." SET optkey='blog_page' WHERE optkey='collective_updates_page'";
 
 	if ($fu->db->Execute($query)) {
         $fu->AddSuccess('Updated option name for <strong>blog_page</strong>');
@@ -699,7 +699,7 @@ if ($version_installed > 0 && version_compare($version_installed, '2.2b', '<')) 
         $fu->AddErr('Failed to update option name for <strong>blog_page</strong>.');
     }
 
-	$query = "UPDATE ".$fu->getOpt('options_table')." SET optkey='install_path' WHERE optkey='install_folder'";
+	$query = 'UPDATE ' .$fu->getOpt('options_table')." SET optkey='install_path' WHERE optkey='install_folder'";
 
 	if ($fu->db->Execute($query)) {
         $fu->AddSuccess('Updated option name for <strong>install_path</strong>');
@@ -709,7 +709,7 @@ if ($version_installed > 0 && version_compare($version_installed, '2.2b', '<')) 
 
 	// add spam points
 
-	$query = "ALTER TABLE ".$fu->getOpt('comments_table')."
+	$query = 'ALTER TABLE ' .$fu->getOpt('comments_table')."
       ADD `points` INT(4) NOT NULL DEFAULT '0' AFTER `approved`";
 
     if ($fu->db->Execute($query)) {
@@ -720,7 +720,7 @@ if ($version_installed > 0 && version_compare($version_installed, '2.2b', '<')) 
 
 	// remove {{wysiwyg}} template tag
 
-	$query = "UPDATE ".$fu->getOpt('options_table')." SET optvalue=REPLACE(optvalue, '{{wysiwyg}}<br />', '') WHERE optkey='comment_form_template'";
+	$query = 'UPDATE ' .$fu->getOpt('options_table')." SET optvalue=REPLACE(optvalue, '{{wysiwyg}}<br />', '') WHERE optkey='comment_form_template'";
 
     if ($fu->db->Execute($query)) {
 		if ($fu->db->AffectedRows() > 0) {
@@ -730,7 +730,7 @@ if ($version_installed > 0 && version_compare($version_installed, '2.2b', '<')) 
         $fu->AddErr('Old {{wysiwyg}} template tag not removed!');
     }
 
-	$query = "UPDATE ".$fu->getOpt('options_table')." SET optvalue=REPLACE(optvalue, '{{wysiwyg}}', '') WHERE optkey='comment_form_template'";
+	$query = 'UPDATE ' .$fu->getOpt('options_table')." SET optvalue=REPLACE(optvalue, '{{wysiwyg}}', '') WHERE optkey='comment_form_template'";
 
     if ($fu->db->Execute($query)) {
 		if ($fu->db->AffectedRows() > 0) {
@@ -747,7 +747,7 @@ if ($version_installed > 0 && version_compare($version_installed, '2.2b3', '<'))
 
 	// ___________________________________________ convert to GMT
 
-	$query = "UPDATE ".$fu->getOpt('blog_table')." SET added=DATE_ADD(added, INTERVAL ".(0 - $setting[27]['optvalue'])." HOUR)";
+	$query = 'UPDATE ' .$fu->getOpt('blog_table'). ' SET added=DATE_ADD(added, INTERVAL ' .(0 - $setting[27]['optvalue']). ' HOUR)';
 
 	if ($fu->db->Execute($query)) {
 		if ($fu->db->AffectedRows() > 0) {
@@ -757,7 +757,7 @@ if ($version_installed > 0 && version_compare($version_installed, '2.2b3', '<'))
         $fu->AddErr('Failed to convert blog times to GMT!');
     }
 
-	$query = "UPDATE ".$fu->getOpt('comments_table')." SET added=DATE_ADD(added, INTERVAL ".(0 - $setting[27]['optvalue'])." HOUR)";
+	$query = 'UPDATE ' .$fu->getOpt('comments_table'). ' SET added=DATE_ADD(added, INTERVAL ' .(0 - $setting[27]['optvalue']). ' HOUR)';
 
 	if ($fu->db->Execute($query)) {
 		if ($fu->db->AffectedRows() > 0) {
@@ -775,7 +775,7 @@ if ($version_installed > 0 && version_compare($version_installed, '2.2.1b2', '<'
 
 	// ___________________________________________ modify old comment table scheme
 
-    $query = "ALTER TABLE ".$fu->getOpt('comments_table')."
+    $query = 'ALTER TABLE ' .$fu->getOpt('comments_table')."
       CHANGE `added` `added` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'";
 
     if ($fu->db->Execute($query)) {
@@ -845,7 +845,7 @@ if ($version_installed > 0 && version_compare($version_installed, $installer_ver
 		$optkey = $fu->db->Escape($val['optkey']);
 		$optdesc = $fu->db->Escape($val['optdesc']);
 
-		$query = "UPDATE ".$fu->getOpt('options_table')." SET optdesc='$optdesc' WHERE optkey='$optkey'";
+		$query = 'UPDATE ' .$fu->getOpt('options_table')." SET optdesc='$optdesc' WHERE optkey='$optkey'";
 
         if ($fu->db->Execute($query)) {
 			if ($fu->db->AffectedRows() > 0) {
@@ -871,7 +871,7 @@ if (version_compare($version_installed, $installer_version, '<')) {
         $optvalue = $fu->db->Escape($clean['value'][$key]);
         $optdesc = $fu->db->Escape($setting[$val]['optdesc']);
 
-        $query = "INSERT INTO ".$fu->getOpt('options_table')." SET optkey='$optkey', optvalue='$optvalue', optdesc='$optdesc'";
+        $query = 'INSERT INTO ' .$fu->getOpt('options_table')." SET optkey='$optkey', optvalue='$optvalue', optdesc='$optdesc'";
 
         if ($fu->db->Execute($query)) {
             $fu->AddSuccess('Set <strong>'.$optkey.'</strong> = '.nl2br(htmlspecialchars($clean['value'][$key])));
@@ -881,7 +881,7 @@ if (version_compare($version_installed, $installer_version, '<')) {
     }
 }
 
-$query = "UPDATE ".$fu->getOpt('options_table')." SET optvalue='".$fu->getOpt('version')."' WHERE optkey='_db_version'";
+$query = 'UPDATE ' .$fu->getOpt('options_table')." SET optvalue='".$fu->getOpt('version')."' WHERE optkey='_db_version'";
 
 if (!$fu->db->Execute($query)) {
     $fu->AddErr('Failed to set current db version.');
