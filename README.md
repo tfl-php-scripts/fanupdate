@@ -15,7 +15,7 @@ If you are using an old version of FanUpdate 2.2.1:
 1. **Back up all your current FanUpdate configurations, files, and databases first.**
 2. Take note of your database information in all your `fanupdate/blog-config.php` files.
 3. Download [an archive of the FanUpdate folder in this repository](https://gitlab.com/tfl-php-scripts/fanupdate/-/archive/master/fanupdate-master.zip?path=fanupdate). Extract the archive.
-4. Replace your current `fanupdate/` files with the `fanupdate/` files from this repository. Make sure that the only difference between your blog-config.php files and the ones from [samples folder](https://gitlab.com/tfl-php-scripts/fanupdate/-/archive/master/fanupdate-master.zip?path=samples) are credentials.
+4. Replace your current `fanupdate/` files with the `fanupdate/` files from this repository.
 
 Please follow the instructions carefully. A lot of issues were related to facts that users had incorrect config files.
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Feb 28, 2020 at 08:52 PM
+-- Generation Time: Feb 28, 2020 at 08:55 PM
 -- Server version: 5.5.62
 -- PHP Version: 7.2.25
 
@@ -162,6 +162,13 @@ CREATE TABLE `blog_comments` (
     `points` int(4) NOT NULL DEFAULT '0'
     ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `blog_comments`
+--
+
+INSERT INTO `blog_comments` (`comment_id`, `entry_id`, `name`, `email`, `url`, `added`, `comment`, `approved`, `points`) VALUES
+    (1, 2, 'Commentator', 'myemail@jghdfjkjkjgkdjgkdf.com', 'http://exampleeeeee.com', '2020-02-28 20:54:08', 'Comment', 1, -3);
+
 -- --------------------------------------------------------
 
 --
@@ -309,5 +316,5 @@ INSERT INTO `blog_options` (`optkey`, `optvalue`, `optdesc`) VALUES
 -- AUTO_INCREMENT for table `blog_comments`
 --
     ALTER TABLE `blog_comments`
-    MODIFY `comment_id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `comment_id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
     COMMIT;
