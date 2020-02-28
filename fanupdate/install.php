@@ -230,7 +230,7 @@ $setting[19]['optvalue'] = '<div class="archivelink">
 </div><!-- END .archivelink -->
 
 <div class="credit">
-<p>Powered by <a href="{{fanupdate_url}}" class="ext">FanUpdate {{fanupdate_version}}</a></p>
+<p>Powered by <a href="{{fanupdate_url}}" target="_blank" class="ext">FanUpdate {{fanupdate_version}}</a> / Original script by <a href="{{fanupdate_original_url}}" target="_blank" class="ext">{{fanupdate_original_url}}</a></p></p>
 </div><!-- END .credit -->';
 $setting[19]['optdesc'] = 'Put your footer blog navigation here. See readme.txt for template variables.';
 $setting[19]['version'] = 2.1;

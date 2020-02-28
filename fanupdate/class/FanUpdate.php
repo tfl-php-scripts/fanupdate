@@ -243,55 +243,50 @@ class FanUpdate
 
     public function checkUpdates()
     {
+        $updatesFeedUrl = 'https://scripts.robotess.net/projects/fanupdate/atom.xml';
+        $posts = '';
 
-        // check prism-perfect.net only once a week
-        if ($this->getOpt('_last_update_check') <= date('Y-m-d', strtotime('-1 week'))) {
-
-            if ($fsock = @fsockopen('prism-perfect.net', 80, $errno, $errstr, 10)) {
-
-                @fwrite($fsock, "GET /fanupdate.txt HTTP/1.1\r\n");
-                @fwrite($fsock, "Host: prism-perfect.net\r\nUser-Agent: FanUpdate/" . $this->getOpt('version') . "\r\n");
-                @fwrite($fsock, "Connection: close\r\n\r\n");
-
-                $get_info = false;
-                while (!@feof($fsock)) {
-                    if ($get_info) {
-                        $version_info = @fread($fsock, 1024);
-                        break;
-                    }
-
-                    if (@fgets($fsock, 1024) == "\r\n") {
-                        $get_info = true;
-                    }
-                }
-                @fclose($fsock);
-
-            } else if ($errstr) {
-                $this->ReportErrors('Connect socket error. Cannot check for updates.');
-                return false;
-            } else {
-                $this->ReportErrors('Socket functions disabled. Cannot check for updates');
-                return false;
+        try {
+            $doc = new DOMDocument();
+            $success = @$doc->load($updatesFeedUrl);
+            if (!$success) {
+                throw new \RuntimeException('Was not able to retrieve updates from remote server');
             }
 
-            // it comes from prism-perfect.net but it might still be unsafe!
-            $version_info = clean_input($version_info);
-            $this->AddOpt('_last_update_check', date('Y-m-d'));
-            $this->AddOpt('_last_update_version', $version_info);
-            $sql_version_info = $this->db->Escape($version_info);
-            $this->db->Execute('UPDATE ' . $this->getOpt('options_table') . " SET optvalue='" . date('Y-m-d') . "' WHERE optkey='_last_update_check'");
-            $this->db->Execute('UPDATE ' . $this->getOpt('options_table') . " SET optvalue='$sql_version_info' WHERE optkey='_last_update_version'");
+            $domChannel = $doc->getElementsByTagName('channel');
+            if ($domChannel->length !== 1) {
+                echo '<p class="success">Feed is empty</p>';
+            }
 
+            if ($domChannel->item(0)->getElementsByTagName('item')->length === 0) {
+                echo '<p class="success">Feed is empty</p>';
+            }
+
+            /** @var DOMElement $node */
+            foreach ($domChannel->item(0)->getElementsByTagName('item') as $node) {
+                $title = $node->getElementsByTagName('title')->item(0)->nodeValue;
+                $link = $node->getElementsByTagName('link')->item(0)->nodeValue;
+                $pubdate = $node->getElementsByTagName('pubDate')->item(0)->nodeValue;
+                $description = $node->getElementsByTagName('description')->item(0)->nodeValue;
+
+                $timestamp = strtotime($pubdate);
+                $daylong = date('l', $timestamp);
+                $monlong = date('F', $timestamp);
+                $yyyy = date('Y', $timestamp);
+                $dth = date('jS', $timestamp);
+                $min = date('i', $timestamp);
+                $_24hh = date('H', $timestamp);
+
+                $posts .= <<<MARKUP
+                <li><a href="{$link}" target="_blank">{$title}</a><br>{$daylong}, {$dth} {$monlong} {$yyyy}, {$_24hh}:{$min}<br>{$description}</li>
+MARKUP;
+            }
+        } catch (Exception $e) {
+            echo '<p class="error">Was not able to connect to feed: ' . $e->getMessage() . '</p>';
+            return;
         }
 
-        if (version_compare($this->getOpt('version'), $this->getOpt('_last_update_version'), '<')) {
-            $this->ReportErrors('Oh dear! This is not the latest version of FanUpdate. Please visit <a href="' . $this->getOpt('url') . '">' . $this->getOpt('url') . '</a> to download <strong>FanUpdate version ' . $this->getOpt('_last_update_version') . '</strong>.');
-            return false;
-        }
-
-        //$this->ReportSuccess('This version of FanUpdate is <strong>up-to-date</strong>.<br />Last checked: '.date($this->getOpt('date_format'), strtotime($this->getOpt('_last_update_check'))));
-
-        return true;
+        echo '<h3>Project RSS</h3><ul>' . $posts . '</ul>';
     }
 
     public function makeSmiley($txt, $img)
@@ -384,7 +379,7 @@ class FanUpdate
 
         $text = str_replace('{{main_url}}', $this->getCleanSelf(), $this->getOpt('footer_template'));
         $text = str_replace(array('{{archive_url}}', '{{rss_url}}'), array($this->getCleanSelf() . '?view=archive', $rss_url), $text);
-        $text = str_replace(array('{{fanupdate_url}}', '{{fanupdate_version}}'), array($this->getOpt('url'), $this->getOpt('version')), $text);
+        $text = str_replace(array('{{fanupdate_url}}', '{{fanupdate_version}}', '{{fanupdate_original_url}}'), array($this->getOpt('newUrl'), $this->getOpt('version'), $this->getOpt('url')), $text);
 
         echo $text;
     }
@@ -483,11 +478,10 @@ class FanUpdate
     {
         ?>
         Powered by <a href="<?= $this->GetOpt('newUrl') ?>" target="_blank"
-                      title="PHP scripts collection: Enthusiast, CodeSort, SiteSkin for PHP 7">CodeSort <?= $this->GetOpt('version') ?></a> (2020 - ...) /
+                      title="PHP scripts collection: Enthusiast, CodeSort, SiteSkin for PHP 7">FanUpdate <?= $this->GetOpt('version') ?></a> (2020 - ...) /
         Original script by <a href="<?= $this->GetOpt('url') ?>" target="_blank"><?= $this->GetOpt('url') ?></a>
         <?php
     }
-
 
     public function printBlog($query, $main_limit = 5, $single_page = false)
     {
