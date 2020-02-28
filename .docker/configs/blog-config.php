@@ -25,14 +25,14 @@
 // ------------->ADMIN VARIABLES
 
 $fanupdate['admin_username']	= 'admin';
-$fanupdate['admin_password']	= md5('pass');
+$fanupdate['admin_password']	= md5('password');
 
 // ------------->DATABASE VARIABLES
 
-$fanupdate['dbhost']		= 'localhost';
-$fanupdate['dbuser']		= 'admin';
-$fanupdate['dbpass']		= 'pass';
-$fanupdate['dbname']		= 'database_name';
+$fanupdate['dbhost']		= 'mysql';
+$fanupdate['dbuser']		= 'fanupdate';
+$fanupdate['dbpass']		= 'password';
+$fanupdate['dbname']		= 'fanupdate';
 
 // ------------->TABLE VARIABLES
 
@@ -89,5 +89,3 @@ $coltable['g']['subject']	= 'flsubject';
 
 $coltable['n']['id']		= 'fl_id';
 $coltable['n']['subject']	= 'fl_subject';
-
-?>
