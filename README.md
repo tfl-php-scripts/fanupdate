@@ -1,4 +1,4 @@
-# FanUpdate Enhanced 
+# FanUpdate for PHP 7 
 
 Original author is [Jenny](http://prism-perfect.net) / Original readme is [here](fanupdate/docs/readme.txt).
 
