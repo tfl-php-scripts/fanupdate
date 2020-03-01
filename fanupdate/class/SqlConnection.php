@@ -3,6 +3,7 @@
  * SqlConnection Class for MySQL databases
  *
  * Copyright (c) Jay Pipes http://www.jpipes.com/index.php?/archives/99-MySQL-Connection-Management-in-PHP-How-Not-To-Do-Things.html
+ * Copyright (c) 2008 by Jenny Ferenc (contributor) <jenny@prism-perfect.net>
  * Copyright (c) 2020 by Ekaterina (contributor) http://scripts.robotess.net
  *
  * This program is free software: you can redistribute it and/or modify
