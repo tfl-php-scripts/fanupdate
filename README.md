@@ -1,4 +1,4 @@
-# FanUpdate for PHP 7 
+# FanUpdate Enhanced (v 2.3) for PHP 7
 
 Original author is [Jenny](http://prism-perfect.net) / Original readme is [here](fanupdate/docs/readme.txt).
 
@@ -10,7 +10,7 @@ This version requires at least PHP 7.2.
 
 I'm not providing support for those who have version lower than FanUpdate 2.2.1.
 
-If you are using FanUpdate 2.2.1 or higher:
+If you are using FanUpdate 2.2.1 (old version by Jenny) or 2.3.* (my version):
 
 1. **Back up all your current FanUpdate configurations, files, and databases first.**
 2. Take note of your database information in all your `fanupdate/blog-config.php` files.
