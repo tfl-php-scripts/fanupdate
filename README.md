@@ -10,7 +10,7 @@ This version requires at least PHP 7.2.
 
 I'm not providing support for those who have version lower than FanUpdate 2.2.1.
 
-If you are using an old version of FanUpdate 2.2.1:
+If you are using FanUpdate 2.2.1 or higher:
 
 1. **Back up all your current FanUpdate configurations, files, and databases first.**
 2. Take note of your database information in all your `fanupdate/blog-config.php` files.
