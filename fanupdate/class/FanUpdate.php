@@ -39,7 +39,7 @@ class FanUpdate
     public $observers = array();
 
     private $config = [
-        'version' => '2.3',
+        'version' => '[Robotess Fork] 1.0',
         'url' => 'http://prism-perfect.net/fanupdate',
         'newUrl' => 'https://scripts.robotess.net',
     ];
@@ -478,8 +478,8 @@ MARKUP;
     {
         ?>
         Powered by <a href="<?= $this->GetOpt('newUrl') ?>" target="_blank"
-                      title="PHP scripts collection: Enthusiast, CodeSort, SiteSkin for PHP 7">FanUpdate <?= $this->GetOpt('version') ?></a> (2020 - ...) /
-        Original script by <a href="<?= $this->GetOpt('url') ?>" target="_blank"><?= $this->GetOpt('url') ?></a>
+                      title="PHP Scripts: Enthusiast, Siteskin, Codesort - ported to PHP 7">FanUpdate <?= $this->GetOpt('version') ?></a>
+        (original author: <a href="<?= $this->GetOpt('url') ?>" target="_blank">Jenny</a>)
         <?php
     }
 
