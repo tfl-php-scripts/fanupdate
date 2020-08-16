@@ -21,4 +21,4 @@ If you are using FanUpdate 2.2.1 (old version by Jenny) or FanUpdate [Robotess F
 
 Please follow the instructions carefully. A lot of issues were caused by users having incorrect config files.
 
-That's it! Should you encounter any problems, please create an issue (here: https://gitlab.com/tfl-php-scripts/fanupdate/-/issues), and I will try and solve it if I can. You can also report an issue via contact form: http://contact.robotess.net . Please note that I don't support fresh installations, only those that were upgraded from old version.
+That's it! Should you encounter any problems, please create an issue (here: https://gitlab.com/tfl-php-scripts/fanupdate/-/issues), and I will try and solve it if I can. You can also report an issue via contact form: http://contact.robotess.net?box=scripts&subject=Issue+with+FanUpdate . Please note that I don't support fresh installations, only those that were upgraded from old version.
